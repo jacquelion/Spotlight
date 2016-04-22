@@ -5,10 +5,107 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
+        <!--Add Images View Controller-->
+        <scene sceneID="zdZ-vJ-gj2">
+            <objects>
+                <viewController storyboardIdentifier="AddImagesViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0p9-WM-vBb" customClass="AddImagesViewController" customModule="Spotlight" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Tlb-q3-sZL"/>
+                        <viewControllerLayoutGuide type="bottom" id="PTT-d3-boG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="BgA-p0-lfL">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wNC-ld-N9W">
+                                <rect key="frame" x="223" y="117" width="154" height="30"/>
+                                <state key="normal" title="Import from Instagram"/>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a3l-CK-Dtf">
+                                <rect key="frame" x="285" y="175" width="30" height="30"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bls-yJ-GDz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1734" y="429"/>
+        </scene>
+        <!--Insta Auth View Controller-->
+        <scene sceneID="0u7-68-Xz5">
+            <objects>
+                <viewController storyboardIdentifier="InstaAuthViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FOB-aH-Ik1" customClass="InstaAuthViewController" customModule="Spotlight" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="N5Q-65-RD0"/>
+                        <viewControllerLayoutGuide type="bottom" id="JDc-xS-6I7"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kI1-gQ-J5N">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TIe-kH-xZ3">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                                <connections>
+                                    <outlet property="delegate" destination="FOB-aH-Ik1" id="U3N-MZ-jff"/>
+                                </connections>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="TIe-kH-xZ3" firstAttribute="bottom" secondItem="JDc-xS-6I7" secondAttribute="top" id="Jqk-af-udn"/>
+                            <constraint firstItem="TIe-kH-xZ3" firstAttribute="top" secondItem="kI1-gQ-J5N" secondAttribute="top" id="WDa-gm-RBf"/>
+                            <constraint firstItem="TIe-kH-xZ3" firstAttribute="leading" secondItem="kI1-gQ-J5N" secondAttribute="leading" id="bAs-tO-gEQ"/>
+                            <constraint firstAttribute="trailing" secondItem="TIe-kH-xZ3" secondAttribute="trailing" id="oGB-Ui-ens"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="TIe-kH-xZ3" id="4ec-b2-h4i"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vi3-q5-C1c" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1734" y="1084"/>
+        </scene>
+        <!--Collection View Controller-->
+        <scene sceneID="BFT-mf-7It">
+            <objects>
+                <collectionViewController storyboardIdentifier="InstaCollectionViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Nae-kI-oSt" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="xZY-aS-wMK">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="YkL-GT-D2J">
+                            <size key="itemSize" width="261" height="261"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="jCQ-gE-kUk">
+                                <rect key="frame" x="0.0" y="0.0" width="261" height="261"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="261" height="261"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="Nae-kI-oSt" id="10g-u0-xfZ"/>
+                            <outlet property="delegate" destination="Nae-kI-oSt" id="NU6-CG-vPm"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Oi4-PE-4mv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2365" y="427"/>
+        </scene>
         <!--My Map-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Spotlight" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MapViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="MapViewController" customModule="Spotlight" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -42,7 +139,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1117" y="429"/>
+            <point key="canvasLocation" x="1093" y="429"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="gOE-4G-JhX">

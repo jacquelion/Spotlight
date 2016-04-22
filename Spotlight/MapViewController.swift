@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MapViewController.swift
 //  Spotlight
 //
 //  Created by Jacqueline Sloves on 4/21/16.
@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
+class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
     var locationManager: CLLocationManager!
     var startLocation: CLLocation!
@@ -95,5 +95,32 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         annotation.coordinate = location.coordinate
         mapView.addAnnotation(annotation)
     }
+    
+    //MARK: - MapView Delegate
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView){
+        let coordinate = view.annotation?.coordinate
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let vc = storyboard.instantiateViewControllerWithIdentifier("InstaAuthViewController") as! InstaAuthViewController
+        
+        let urlString = "https://api.instagram.com/oauth/authorize/?client_id=60e0fe0b74e849ec83f81f18b781b88f&redirect_uri=https://www.instagram.com/&response_type=token"
+        let url = NSURL(string: urlString)
+        let request = NSURLRequest(URL: url!)
+        vc.urlRequest = request
+        
+        //vc.latitude = (view.annotation?.coordinate.latitude)!
+        //vc.longitude = (view.annotation?.coordinate.longitude)!
+        //vc.latitudeDelta = self.mapView.region.span.latitudeDelta
+        //vc.longitudeDelta = self.mapView.region.span.longitudeDelta
+        
+//        for location in locations {
+//            if location.latitude == (coordinate!.latitude) && location.longitude == (coordinate!.longitude) {
+//                vc.location = location
+//                break
+//            }
+//        }
+        
+        self.presentViewController(vc, animated: true, completion: nil)
+    }
 }
-

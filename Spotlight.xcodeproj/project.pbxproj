@@ -8,22 +8,28 @@
 
 /* Begin PBXBuildFile section */
 		6D26A1FF1CC9AAC20073FF3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A1FE1CC9AAC20073FF3F /* AppDelegate.swift */; };
-		6D26A2011CC9AAC20073FF3F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A2001CC9AAC20073FF3F /* ViewController.swift */; };
+		6D26A2011CC9AAC20073FF3F /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A2001CC9AAC20073FF3F /* MapViewController.swift */; };
 		6D26A2041CC9AAC20073FF3F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D26A2021CC9AAC20073FF3F /* Main.storyboard */; };
 		6D26A2071CC9AAC20073FF3F /* Spotlight.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A2051CC9AAC20073FF3F /* Spotlight.xcdatamodeld */; };
 		6D26A2091CC9AAC20073FF3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6D26A2081CC9AAC20073FF3F /* Assets.xcassets */; };
 		6D26A20C1CC9AAC20073FF3F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D26A20A1CC9AAC20073FF3F /* LaunchScreen.storyboard */; };
+		6D26A2141CCAB1EA0073FF3F /* AddImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A2131CCAB1EA0073FF3F /* AddImagesViewController.swift */; };
+		6D26A2161CCAB29A0073FF3F /* InstaCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A2151CCAB29A0073FF3F /* InstaCollectionViewController.swift */; };
+		6D26A21B1CCAB8180073FF3F /* InstaAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A21A1CCAB8180073FF3F /* InstaAuthViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		6D26A1FB1CC9AAC20073FF3F /* Spotlight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spotlight.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D26A1FE1CC9AAC20073FF3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		6D26A2001CC9AAC20073FF3F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		6D26A2001CC9AAC20073FF3F /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		6D26A2031CC9AAC20073FF3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6D26A2061CC9AAC20073FF3F /* Spotlight.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Spotlight.xcdatamodel; sourceTree = "<group>"; };
 		6D26A2081CC9AAC20073FF3F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6D26A20B1CC9AAC20073FF3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6D26A20D1CC9AAC20073FF3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6D26A2131CCAB1EA0073FF3F /* AddImagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddImagesViewController.swift; sourceTree = "<group>"; };
+		6D26A2151CCAB29A0073FF3F /* InstaCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstaCollectionViewController.swift; sourceTree = "<group>"; };
+		6D26A21A1CCAB8180073FF3F /* InstaAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstaAuthViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,8 +62,10 @@
 		6D26A1FD1CC9AAC20073FF3F /* Spotlight */ = {
 			isa = PBXGroup;
 			children = (
+				6D26A2171CCAB6470073FF3F /* Model */,
+				6D26A2181CCAB64D0073FF3F /* View */,
+				6D26A2191CCAB6590073FF3F /* Controller */,
 				6D26A1FE1CC9AAC20073FF3F /* AppDelegate.swift */,
-				6D26A2001CC9AAC20073FF3F /* ViewController.swift */,
 				6D26A2021CC9AAC20073FF3F /* Main.storyboard */,
 				6D26A2081CC9AAC20073FF3F /* Assets.xcassets */,
 				6D26A20A1CC9AAC20073FF3F /* LaunchScreen.storyboard */,
@@ -65,6 +73,31 @@
 				6D26A2051CC9AAC20073FF3F /* Spotlight.xcdatamodeld */,
 			);
 			path = Spotlight;
+			sourceTree = "<group>";
+		};
+		6D26A2171CCAB6470073FF3F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		6D26A2181CCAB64D0073FF3F /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		6D26A2191CCAB6590073FF3F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				6D26A2001CC9AAC20073FF3F /* MapViewController.swift */,
+				6D26A21A1CCAB8180073FF3F /* InstaAuthViewController.swift */,
+				6D26A2151CCAB29A0073FF3F /* InstaCollectionViewController.swift */,
+				6D26A2131CCAB1EA0073FF3F /* AddImagesViewController.swift */,
+			);
+			name = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,8 +172,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D26A2071CC9AAC20073FF3F /* Spotlight.xcdatamodeld in Sources */,
-				6D26A2011CC9AAC20073FF3F /* ViewController.swift in Sources */,
+				6D26A2011CC9AAC20073FF3F /* MapViewController.swift in Sources */,
+				6D26A2141CCAB1EA0073FF3F /* AddImagesViewController.swift in Sources */,
 				6D26A1FF1CC9AAC20073FF3F /* AppDelegate.swift in Sources */,
+				6D26A21B1CCAB8180073FF3F /* InstaAuthViewController.swift in Sources */,
+				6D26A2161CCAB29A0073FF3F /* InstaCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +328,7 @@
 				6D26A2121CC9AAC20073FF3F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
