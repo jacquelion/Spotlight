@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6D0E36561CCDA8A500CC654A /* CoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E36551CCDA8A500CC654A /* CoreDataStackManager.swift */; };
+		6D0E365A1CCDAAB600CC654A /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E36591CCDAAB600CC654A /* Image.swift */; };
+		6D0E365C1CCDAAC500CC654A /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E365B1CCDAAC500CC654A /* Location.swift */; };
+		6D0E365E1CCDC5F000CC654A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E365D1CCDC5F000CC654A /* ImageCache.swift */; };
 		6D26A1FF1CC9AAC20073FF3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A1FE1CC9AAC20073FF3F /* AppDelegate.swift */; };
 		6D26A2011CC9AAC20073FF3F /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A2001CC9AAC20073FF3F /* MapViewController.swift */; };
 		6D26A2041CC9AAC20073FF3F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D26A2021CC9AAC20073FF3F /* Main.storyboard */; };
@@ -23,6 +27,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6D0E36551CCDA8A500CC654A /* CoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStackManager.swift; sourceTree = "<group>"; };
+		6D0E36591CCDAAB600CC654A /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		6D0E365B1CCDAAC500CC654A /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		6D0E365D1CCDC5F000CC654A /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		6D26A1FB1CC9AAC20073FF3F /* Spotlight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spotlight.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D26A1FE1CC9AAC20073FF3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6D26A2001CC9AAC20073FF3F /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -51,6 +59,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6D0E36571CCDAA9C00CC654A /* Client */ = {
+			isa = PBXGroup;
+			children = (
+				6D0E36581CCDAAA100CC654A /* Instagram */,
+			);
+			name = Client;
+			sourceTree = "<group>";
+		};
+		6D0E36581CCDAAA100CC654A /* Instagram */ = {
+			isa = PBXGroup;
+			children = (
+				6D26A21C1CCBE0550073FF3F /* InstagramClient.swift */,
+				6D0E365D1CCDC5F000CC654A /* ImageCache.swift */,
+				6D26A21E1CCBE0600073FF3F /* InstagramConvenience.swift */,
+				6D26A2201CCBE1360073FF3F /* Constants.swift */,
+				6D0E36591CCDAAB600CC654A /* Image.swift */,
+				6D0E365B1CCDAAC500CC654A /* Location.swift */,
+			);
+			name = Instagram;
+			sourceTree = "<group>";
+		};
 		6D26A1F21CC9AAC10073FF3F = {
 			isa = PBXGroup;
 			children = (
@@ -79,7 +108,6 @@
 				6D26A2081CC9AAC20073FF3F /* Assets.xcassets */,
 				6D26A20A1CC9AAC20073FF3F /* LaunchScreen.storyboard */,
 				6D26A20D1CC9AAC20073FF3F /* Info.plist */,
-				6D26A2051CC9AAC20073FF3F /* Spotlight.xcdatamodeld */,
 			);
 			path = Spotlight;
 			sourceTree = "<group>";
@@ -87,9 +115,9 @@
 		6D26A2171CCAB6470073FF3F /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				6D26A21C1CCBE0550073FF3F /* InstagramClient.swift */,
-				6D26A21E1CCBE0600073FF3F /* InstagramConvenience.swift */,
-				6D26A2201CCBE1360073FF3F /* Constants.swift */,
+				6D0E36571CCDAA9C00CC654A /* Client */,
+				6D26A2051CC9AAC20073FF3F /* Spotlight.xcdatamodeld */,
+				6D0E36551CCDA8A500CC654A /* CoreDataStackManager.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -184,14 +212,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D26A21F1CCBE0600073FF3F /* InstagramConvenience.swift in Sources */,
+				6D0E365A1CCDAAB600CC654A /* Image.swift in Sources */,
 				6D26A2071CC9AAC20073FF3F /* Spotlight.xcdatamodeld in Sources */,
+				6D0E36561CCDA8A500CC654A /* CoreDataStackManager.swift in Sources */,
 				6D26A2011CC9AAC20073FF3F /* MapViewController.swift in Sources */,
 				6D26A2141CCAB1EA0073FF3F /* AddImagesViewController.swift in Sources */,
+				6D0E365C1CCDAAC500CC654A /* Location.swift in Sources */,
 				6D26A2231CCBE1D40073FF3F /* GCDBlackBox.swift in Sources */,
 				6D26A21D1CCBE0550073FF3F /* InstagramClient.swift in Sources */,
 				6D26A1FF1CC9AAC20073FF3F /* AppDelegate.swift in Sources */,
 				6D26A21B1CCAB8180073FF3F /* InstaAuthViewController.swift in Sources */,
 				6D26A2161CCAB29A0073FF3F /* InstaCollectionViewController.swift in Sources */,
+				6D0E365E1CCDC5F000CC654A /* ImageCache.swift in Sources */,
 				6D26A2211CCBE1360073FF3F /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

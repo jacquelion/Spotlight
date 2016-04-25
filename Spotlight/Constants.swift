@@ -13,7 +13,7 @@ extension InstagramClient {
         
         static let ApiScheme = "https"
         static let ApiHost = "api.instagram.com"
-        static let ApiPath = "/v1"
+        static let ApiPath = "/v1/"
         
         static let AuthorizationURL : String = "https://api.instagram.com/oauth/authorize/"
         

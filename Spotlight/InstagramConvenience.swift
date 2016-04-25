@@ -21,8 +21,6 @@ extension InstagramClient {
         getToken(hostViewController) { (success, errorString) in
             
             if success {
-                //save code to variable accessible throughout app
-                //self.code = code
                 
                 self.getPicturesByLocation(hostViewController) { (success, errorString) in
                     if (success) {
@@ -40,7 +38,7 @@ extension InstagramClient {
     private func getToken(hostViewController: UIViewController, completionHandlerForCode: (success: Bool, errorString: String?) -> Void) {
         let webAuthViewController = hostViewController.storyboard!.instantiateViewControllerWithIdentifier("InstaAuthViewController") as! InstaAuthViewController
         
-        let urlString = "https://api.instagram.com/oauth/authorize/?client_id=60e0fe0b74e849ec83f81f18b781b88f&redirect_uri=https://www.instagram.com/&response_type=token&scope=basic"
+        let urlString = "https://api.instagram.com/oauth/authorize/?client_id=60e0fe0b74e849ec83f81f18b781b88f&redirect_uri=https://www.instagram.com/&response_type=token&scope=public_content"
         let url = NSURL(string: urlString)
         let request = NSURLRequest(URL: url!)
         
@@ -58,25 +56,25 @@ extension InstagramClient {
     }
     
     func getPicturesByLocation(hostViewController: UIViewController, completionHandlerForLogin:(success: Bool, errorString: String?) -> Void) {
-        //https://api.instagram.com/v1/media/search?lat=48.858844&lng=2.294351&access_token=ACCESS-TOKEN
-
-        var parameters = [String: AnyObject]()
-        //parameters["lat"] = Double(37.87144)
-        //parameters["lng"] = Double(122.27275)
-        //parameters["scope"] = "public_content"
-        //parameters["count"] = 20
-        parameters["access_token"] = InstagramClient.sharedInstance().AccessToken
-        //https://api.instagram.com/v1/users/self/media/liked?access_token=ACCESS-TOKEN
-//Method for search by lat/long: /media/search
         
-        taskForGETMethod("/users/self/", parameters: parameters) { (results, error) in
+        var parameters = [String: AnyObject]()
+        parameters["access_token"] = InstagramClient.sharedInstance().AccessToken
+        parameters["count"] = 5
+        
+        taskForGETMethod("users/self/media/recent/", parameters: parameters) { (results, error) in
             if let error = error {
                 print(error)
                 //completionHandlerForAuth(success: false, errorString: "Could not get pictures by location.")
             } else {
                 print("RESULTS: ", results)
-                if let data = results["data"] as? NSArray {
+                if let data = results["data"] as? [[String: AnyObject]] {
                     print("DATA: ", data)
+//                    if let imageObjects = data["images"] as? [String:AnyObject] {
+//                            print("imageDictionaries: ", imageObjects)
+//                       }
+//                    } else {
+//                        print("Could not find images in \(data)")
+//                   }
                     //completionHandlerForAuth(success: true, errorString: nil)
                 } else {
                     print("Could not find data in \(results)")

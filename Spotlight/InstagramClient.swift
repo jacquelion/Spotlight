@@ -39,16 +39,12 @@ class InstagramClient : NSObject {
     func taskForGETMethod(method: String, var parameters: [String: AnyObject], completionHandlerForGET: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
         
         //Set Parameters
-        //parameters[ParameterKeys.clientId] = Constants.ClientId
-        //parameters[ParameterKeys.redirectURI] = Constants.RedirectURI
-        //parameters[ParameterKeys.responseType] = ParameterValues.code
-        
         var url = instagramURLFromParameters(parameters, withPathExtension: method)
-        print("Line 42, REQUEST URL: ", url)
+        print("REQUEST URL: ", url)
         
-        var urlString = "https://api.instagram.com/v1/users/self/media/recent/?access_token=\(Constants.AccessToken)"
+        //var urlString = "https://api.instagram.com/v1/users/self/media/recent/?access_token=\(Constants.AccessToken)"
         //"https://api.instagram.com/v1/users/self/?access_token=231432668.60e0fe0.ad3d167b242c4ba1b58a7031c843dcae"
-        //"https://api.instagram.com/v1/media/search?lat=48.858844&lng=2.294351&access_token=231432668.60e0fe0.ad3d167b242c4ba1b58a7031c843dcae&scope=public_content"
+        var urlString = "https://api.instagram.com/v1/media/search?lat=35.1107&lng=-106.61&distance=5000&access_token=231432668.60e0fe0.ad3d167b242c4ba1b58a7031c843dcae"
         
         var urlRequest = NSURL(string: urlString)
         
@@ -63,9 +59,9 @@ class InstagramClient : NSObject {
                 completionHandlerForGET(result: nil, error: NSError(domain: "taskForGETMethod", code: 1, userInfo: userInfo))
             }
             
-            print("Data: ", data)
-            print("Response: ", response)
-            print("Error: ", error)
+            //print("Data: ", data)
+            //print("Response: ", response)
+            //print("Error: ", error)
             
             /* GUARD: Was there an error? */
             guard (error == nil) else {
@@ -183,5 +179,10 @@ class InstagramClient : NSObject {
         }
         
         return components.URL!
+    }
+    
+    //MARK: - Shared Image Cache
+    struct Caches {
+        static let imageCache = ImageCache()
     }
 }
