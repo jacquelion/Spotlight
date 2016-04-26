@@ -15,7 +15,7 @@ class Image : NSManagedObject {
         static let id = "id"
         static let url = "url"
         static let imagePath = "path"
-        static let Location = "locaiton"
+        static let Location = "location"
     }
     
     @NSManaged var id: NSNumber

@@ -66,23 +66,53 @@ extension InstagramClient {
                 print(error)
                 //completionHandlerForAuth(success: false, errorString: "Could not get pictures by location.")
             } else {
-                print("RESULTS: ", results)
-                if let data = results["data"] as? [[String: AnyObject]] {
-                    print("DATA: ", data)
-//                    if let imageObjects = data["images"] as? [String:AnyObject] {
-//                            print("imageDictionaries: ", imageObjects)
-//                       }
-//                    } else {
-//                        print("Could not find images in \(data)")
-//                   }
-                    //completionHandlerForAuth(success: true, errorString: nil)
+                //print("RESULTS: ", results)
+                guard let data = results["data"] as? [[String: AnyObject]] else {
+                    print("ERROR WITH DATA: ", results["data"])
+                    return
+                }
+                print("DATA: ", data)
+                
+                if (data.isEmpty) {
+                    //alert user that there search returned no results.
+                    let alertController = UIAlertController(title: "No Results", message: "There are no pictures at the specified location. Please try a query at a different location.", preferredStyle: UIAlertControllerStyle.Alert)
+                    alertController.addAction(UIAlertAction(title: "OK", style:UIAlertActionStyle.Default, handler: nil))
+                    
+                    hostViewController.presentViewController(alertController, animated: true, completion: nil)
                 } else {
-                    print("Could not find data in \(results)")
-                    //completionHandlerForUserID(success: false, userID: nil, errorString: "Login Failed (User ID).")
+                    
+                    guard let data_0 = data[0] as? [String: AnyObject] else {
+                        print("ERROR WITH DATA_0", data[0])
+                        return
+                    }
+                    print("DATA_0: ", data_0)
+                    
+                    guard let images = data_0["images"] as? [String:AnyObject] else {
+                        print("ERROR WITH IMAGES", data_0["images"])
+                        return
+                    }
+                    print("IMAGES: ", data_0["images"])
+                    
+                    
+                    guard let lowResImage = images["low_resolution"] as? [String: AnyObject] else {
+                        print("ERROR WITH LOWRES", images["low_resolution"])
+                        return
+                    }
+                    print("LOW RES IMAGE: ", images["low_resolution"])
+                    
+                    guard let imageURL = lowResImage["url"] as? String else {
+                        print("ERROR WITH IMAGEURL", lowResImage["url"])
+                        return
+                    }
+                    
+                    print("IMAGEURL: ", lowResImage["url"])
+                    
+                    //TODO: Store Image in Cache
+                    //completionHandlerForAuth(success: true, errorString: nil)
                 }
             }
         }
-        
     }
     
 }
+    

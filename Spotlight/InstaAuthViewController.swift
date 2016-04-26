@@ -73,7 +73,6 @@ extension InstaAuthViewController : UIWebViewDelegate {
     
     func webViewDidFinishLoad(webView: UIWebView) {
         let urlString = ("https://www.instagram.com#access_token=\(accessToken)")
-        print("Redirect URL String + Access Token: ", urlString)
         print("webView.request!.URL!.absoluteString: ", webView.request!.URL!.absoluteString)
         //TODO: Sub Redirect URI Constant for string
         if webView.request!.URL!.absoluteString == "https://www.instagram.com/" {
