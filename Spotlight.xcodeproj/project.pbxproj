@@ -11,10 +11,11 @@
 		6D0E365A1CCDAAB600CC654A /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E36591CCDAAB600CC654A /* Image.swift */; };
 		6D0E365C1CCDAAC500CC654A /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E365B1CCDAAC500CC654A /* Location.swift */; };
 		6D0E365E1CCDC5F000CC654A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E365D1CCDC5F000CC654A /* ImageCache.swift */; };
+		6D0E36851CCF47BE00CC654A /* InstagramImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0E36841CCF47BE00CC654A /* InstagramImageCollectionViewCell.swift */; };
 		6D26A1FF1CC9AAC20073FF3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A1FE1CC9AAC20073FF3F /* AppDelegate.swift */; };
 		6D26A2011CC9AAC20073FF3F /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A2001CC9AAC20073FF3F /* MapViewController.swift */; };
 		6D26A2041CC9AAC20073FF3F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D26A2021CC9AAC20073FF3F /* Main.storyboard */; };
-		6D26A2071CC9AAC20073FF3F /* Spotlight.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A2051CC9AAC20073FF3F /* Spotlight.xcdatamodeld */; };
+		6D26A2071CC9AAC20073FF3F /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A2051CC9AAC20073FF3F /* Model.xcdatamodeld */; };
 		6D26A2091CC9AAC20073FF3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6D26A2081CC9AAC20073FF3F /* Assets.xcassets */; };
 		6D26A20C1CC9AAC20073FF3F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D26A20A1CC9AAC20073FF3F /* LaunchScreen.storyboard */; };
 		6D26A2141CCAB1EA0073FF3F /* AddImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A2131CCAB1EA0073FF3F /* AddImagesViewController.swift */; };
@@ -31,11 +32,12 @@
 		6D0E36591CCDAAB600CC654A /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		6D0E365B1CCDAAC500CC654A /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		6D0E365D1CCDC5F000CC654A /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		6D0E36841CCF47BE00CC654A /* InstagramImageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstagramImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		6D26A1FB1CC9AAC20073FF3F /* Spotlight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spotlight.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D26A1FE1CC9AAC20073FF3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6D26A2001CC9AAC20073FF3F /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		6D26A2031CC9AAC20073FF3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		6D26A2061CC9AAC20073FF3F /* Spotlight.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Spotlight.xcdatamodel; sourceTree = "<group>"; };
+		6D26A2061CC9AAC20073FF3F /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		6D26A2081CC9AAC20073FF3F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6D26A20B1CC9AAC20073FF3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6D26A20D1CC9AAC20073FF3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -116,7 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				6D0E36571CCDAA9C00CC654A /* Client */,
-				6D26A2051CC9AAC20073FF3F /* Spotlight.xcdatamodeld */,
+				6D26A2051CC9AAC20073FF3F /* Model.xcdatamodeld */,
 				6D0E36551CCDA8A500CC654A /* CoreDataStackManager.swift */,
 			);
 			name = Model;
@@ -125,6 +127,7 @@
 		6D26A2181CCAB64D0073FF3F /* View */ = {
 			isa = PBXGroup;
 			children = (
+				6D0E36841CCF47BE00CC654A /* InstagramImageCollectionViewCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -211,9 +214,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D0E36851CCF47BE00CC654A /* InstagramImageCollectionViewCell.swift in Sources */,
 				6D26A21F1CCBE0600073FF3F /* InstagramConvenience.swift in Sources */,
 				6D0E365A1CCDAAB600CC654A /* Image.swift in Sources */,
-				6D26A2071CC9AAC20073FF3F /* Spotlight.xcdatamodeld in Sources */,
+				6D26A2071CC9AAC20073FF3F /* Model.xcdatamodeld in Sources */,
 				6D0E36561CCDA8A500CC654A /* CoreDataStackManager.swift in Sources */,
 				6D26A2011CC9AAC20073FF3F /* MapViewController.swift in Sources */,
 				6D26A2141CCAB1EA0073FF3F /* AddImagesViewController.swift in Sources */,
@@ -381,13 +385,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		6D26A2051CC9AAC20073FF3F /* Spotlight.xcdatamodeld */ = {
+		6D26A2051CC9AAC20073FF3F /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				6D26A2061CC9AAC20073FF3F /* Spotlight.xcdatamodel */,
+				6D26A2061CC9AAC20073FF3F /* Model.xcdatamodel */,
 			);
-			currentVersion = 6D26A2061CC9AAC20073FF3F /* Spotlight.xcdatamodel */;
-			path = Spotlight.xcdatamodeld;
+			currentVersion = 6D26A2061CC9AAC20073FF3F /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

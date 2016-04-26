@@ -17,22 +17,22 @@ import Foundation
 
 class InstagramClient : NSObject {
     
+    typealias CompletionHandler = (result: AnyObject!, error: NSError?) -> Void
+    
+    //MARK: - Shared Instance (Singleton)
+    static let sharedInstance = InstagramClient()
+    
     var session = NSURLSession.sharedSession()
+    var imagesDictionary = [NSDictionary]()
+    var imageURLArray = [String]()
+    var images = NSSet()
     
     var AccessToken: String? = nil
     
     //MARK: Initializers
     
-    override init() {
+    private override init() {
         super.init()
-    }
-    
-    // MARK: Shared Instance
-    class func sharedInstance() -> InstagramClient {
-        struct Singleton {
-            static var sharedInstance = InstagramClient()
-        }
-        return Singleton.sharedInstance
     }
     
     //MARK: GET
@@ -42,9 +42,9 @@ class InstagramClient : NSObject {
         var url = instagramURLFromParameters(parameters, withPathExtension: method)
         print("REQUEST URL: ", url)
         
-        //var urlString = "https://api.instagram.com/v1/users/self/media/recent/?access_token=\(Constants.AccessToken)"
+        var urlString = "https://api.instagram.com/v1/users/self/media/recent/?access_token=\(Constants.AccessToken)"
         //"https://api.instagram.com/v1/users/self/?access_token=231432668.60e0fe0.ad3d167b242c4ba1b58a7031c843dcae"
-        var urlString = "https://api.instagram.com/v1/media/search?lat=35.1107&lng=-106.61&distance=5000&access_token=231432668.60e0fe0.ad3d167b242c4ba1b58a7031c843dcae"
+        //var urlString = "https://api.instagram.com/v1/media/search?lat=35.1107&lng=-106.61&distance=5000&access_token=231432668.60e0fe0.ad3d167b242c4ba1b58a7031c843dcae"
         
         var urlRequest = NSURL(string: urlString)
         
@@ -150,6 +150,27 @@ class InstagramClient : NSObject {
     
     
     //MARK: Helpers
+    class func errorForData(data: NSData?, response: NSURLResponse?, error: NSError?) -> NSError
+    {
+        if let parsedResult = (try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)) as? [String : AnyObject]
+        {
+            print("ERROR FOR DATA: ", error)
+            if let errorMessage = parsedResult["status"] as? String
+            {
+                let userInfo = [NSLocalizedDescriptionKey : errorMessage]
+                
+                if let errorCode = parsedResult["error_code"] as? Int
+                {
+                    return NSError(domain: "Instagram Parse Error", code: errorCode, userInfo: userInfo)
+                }
+                
+                return NSError(domain: "Instagram Parse Error", code: 0, userInfo: userInfo)
+            }
+        }
+        
+        return error!
+    }
+
     
     //given RAW JSON, return a usable Foundation object
     private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: (result: AnyObject!, error: NSError?) -> Void) {

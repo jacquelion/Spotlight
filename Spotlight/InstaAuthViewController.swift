@@ -61,7 +61,7 @@ extension InstaAuthViewController : UIWebViewDelegate {
             print("Key, value: ", key, value)
             if key == "access_token" {
                 accessToken = value
-                InstagramClient.sharedInstance().AccessToken = accessToken
+                InstagramClient.sharedInstance.AccessToken = accessToken
                 print("ACCESS TOKEN: ", accessToken)
                 //TODO: Make request with location
             }

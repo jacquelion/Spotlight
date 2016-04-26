@@ -15,7 +15,7 @@ extension InstagramClient {
     //Step 1: Direct User to Authorization URL
     //Step 2: Receive the redirect from Instagram
     //Step 3: Request the Access Token
-    
+        
     func authenticateWithViewController(hostViewController: UIViewController, completionHandlerForAuth: (success: Bool, errorString: String?) -> Void) {
         
         getToken(hostViewController) { (success, errorString) in
@@ -58,7 +58,7 @@ extension InstagramClient {
     func getPicturesByLocation(hostViewController: UIViewController, completionHandlerForLogin:(success: Bool, errorString: String?) -> Void) {
         
         var parameters = [String: AnyObject]()
-        parameters["access_token"] = InstagramClient.sharedInstance().AccessToken
+        parameters["access_token"] = InstagramClient.sharedInstance.AccessToken
         parameters["count"] = 5
         
         taskForGETMethod("users/self/media/recent/", parameters: parameters) { (results, error) in
@@ -80,39 +80,72 @@ extension InstagramClient {
                     
                     hostViewController.presentViewController(alertController, animated: true, completion: nil)
                 } else {
-                    
-                    guard let data_0 = data[0] as? [String: AnyObject] else {
-                        print("ERROR WITH DATA_0", data[0])
-                        return
+                    var count = 0
+                    for dataDictionary in data {
+                        guard let dataObject = data[count] as? [String: AnyObject] else {
+                            print("ERROR WITH DATA[COUNT]:", data[count])
+                            return
+                        }
+                        print("DATA[COUNT]: ", data[count])
+                        
+                        guard let images = dataObject["images"] as? [String:AnyObject] else {
+                            print("ERROR WITH IMAGES", dataObject["images"])
+                            return
+                        }
+                        print("IMAGES: ", dataObject["images"])
+                        
+                        guard let lowResImage = images["low_resolution"] as? [String: AnyObject] else {
+                            print("ERROR WITH LOWRES", images["low_resolution"])
+                            return
+                        }
+                        print("LOW RES IMAGE: ", images["low_resolution"])
+                        
+                        guard let imageURL = lowResImage["url"] as? String else {
+                            print("ERROR WITH IMAGEURL", lowResImage["url"])
+                            return
+                        }
+                        
+                        print("IMAGEURL: ", lowResImage["url"])
+                        self.imageURLArray.append(imageURL)
+
+                        count += 1
                     }
-                    print("DATA_0: ", data_0)
+                    print("IMAGE URL ARRAY: ", self.imageURLArray)
                     
-                    guard let images = data_0["images"] as? [String:AnyObject] else {
-                        print("ERROR WITH IMAGES", data_0["images"])
-                        return
-                    }
-                    print("IMAGES: ", data_0["images"])
+                    //TODO: SET LOCATION
+                    let location = Location()
                     
-                    
-                    guard let lowResImage = images["low_resolution"] as? [String: AnyObject] else {
-                        print("ERROR WITH LOWRES", images["low_resolution"])
-                        return
-                    }
-                    print("LOW RES IMAGE: ", images["low_resolution"])
-                    
-                    guard let imageURL = lowResImage["url"] as? String else {
-                        print("ERROR WITH IMAGEURL", lowResImage["url"])
-                        return
-                    }
-                    
-                    print("IMAGEURL: ", lowResImage["url"])
-                    
+                    let images = Image.imagesFromImageURLArray(self.imageURLArray, location: location)
+                    InstagramClient.sharedInstance.images = images
                     //TODO: Store Image in Cache
-                    //completionHandlerForAuth(success: true, errorString: nil)
+                    completionHandlerForLogin(success: true, errorString: nil)
+                    
+                    let storyboard = UIStoryboard.init(name: "Main", bundle: NSBundle.mainBundle())
+                    let vc = storyboard.instantiateViewControllerWithIdentifier("InstaCollectionViewController") as! InstaCollectionViewController
+                    hostViewController.presentViewController(vc, animated: true, completion: nil)
+                    
                 }
             }
         }
     }
     
+    func taskForImage(imageURL: NSURL, completionHandler: (imageData: NSData?, error: NSError?) -> Void) -> NSURLSessionTask {
+        
+        let request = NSURLRequest(URL: imageURL)
+        
+        let task = session.dataTaskWithRequest(request) {data, response, downloadError in
+            if let error = downloadError {
+                print("Download Error: ", error)
+                let newError = InstagramClient.errorForData(data, response: response, error: error)
+                completionHandler(imageData: nil, error: newError)
+            } else {
+                completionHandler(imageData: data, error: nil)
+            }
+        }
+        
+        task.resume()
+        
+        return task
+    }
 }
     

@@ -103,8 +103,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     //MARK: - MapView Delegate
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView){
         
-        if (InstagramClient.sharedInstance().AccessToken == nil) {
-        InstagramClient.sharedInstance().authenticateWithViewController(self) { (success, errorString) in
+        if (InstagramClient.sharedInstance.AccessToken == nil) {
+        InstagramClient.sharedInstance.authenticateWithViewController(self) { (success, errorString) in
             performUIUpdatesOnMain{
                 if success {
                     print("SUCCESS on Access Token!")
@@ -114,7 +114,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             }
         }
         } else {
-            InstagramClient.sharedInstance().getPicturesByLocation(self) {
+            InstagramClient.sharedInstance.getPicturesByLocation(self) {
             (success, errorString) in
                 performUIUpdatesOnMain{
                     if success {

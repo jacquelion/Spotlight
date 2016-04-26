@@ -8,8 +8,157 @@
 
 import Foundation
 import UIKit
+import CoreData
 
-class InstaCollectionViewController : UICollectionView {
-
-
+class InstaCollectionViewController : UICollectionViewController, NSFetchedResultsControllerDelegate {
+    //MARK: - Collection View Outlets
+    @IBOutlet var myCollectionView: UICollectionView!
+    
+    var insertedIndexPaths: [NSIndexPath]!
+    var deletedIndexPaths: [NSIndexPath]!
+    var updatedIndexPaths: [NSIndexPath]!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        myCollectionView.delegate = self
+        myCollectionView.dataSource = self
+        
+        fetchedResultsController.delegate = self
+        
+        do {
+            try fetchedResultsController.performFetch()
+        } catch{}
+        
+        if let documentsPath = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first?.path {
+            print("DOCUMENTS PATH: ", documentsPath) // "var/folder/.../documents\n" copy the full path
+        }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        loadImages()
+    }
+    
+    func loadImages(){
+        InstagramClient.sharedInstance.getPicturesByLocation(self) { result, error in
+            if let error = error {
+                print(error)
+            } else {
+                dispatch_async(dispatch_get_main_queue()) {
+                    CoreDataStackManager.sharedInstance().saveContext()
+                }
+            }
+        }
+    }
+    
+    //MARK: - Core Data Convenience
+    var sharedContext: NSManagedObjectContext {
+        return CoreDataStackManager.sharedInstance().managedObjectContext
+    }
+    
+    //MARK: - Fetched Results Controller
+    lazy var fetchedResultsController: NSFetchedResultsController = {
+        let fetchRequest = NSFetchRequest(entityName: "Image")
+        
+        fetchRequest.sortDescriptors = []
+        //fetchRequest.predicate = NSPredicate(format: "location == %@", self.location)
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                                  managedObjectContext: self.sharedContext,
+                                                                  sectionNameKeyPath: nil,
+                                                                  cacheName: nil)
+        return fetchedResultsController
+    }()
+    
+    //MARK: - Collection View Functions
+    let reuseIdentifier = "InstagramPictureCell"
+    
+    //MARK: - UICollectionViewDataSource Protocol
+    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        let sectionInfo = self.fetchedResultsController.sections![section]
+        print(sectionInfo.numberOfObjects)
+        return sectionInfo.numberOfObjects
+    }
+    
+    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = myCollectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! InstagramImageCollectionViewCell
+        
+        configureCell(cell, atIndexPath: indexPath)
+        
+        return cell
+    }
+    
+    //MARK: - Fetched Results Controller Delegate
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        //start with empty arrays of each type:
+        insertedIndexPaths = [NSIndexPath]()
+        deletedIndexPaths = [NSIndexPath]()
+        updatedIndexPaths = [NSIndexPath]()
+        
+        print("in controllerWillChangeContent")
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?){
+        switch type{
+            
+        case .Insert:
+            print("Insert an item")
+            insertedIndexPaths.append(newIndexPath!)
+            break
+        case .Delete:
+            print("Delete an item")
+            deletedIndexPaths.append(indexPath!)
+            break
+        case .Update:
+            print("Update an item.")
+            updatedIndexPaths.append(indexPath!)
+            break
+        case .Move:
+            print("Move an item. We don't expect to see this in this app.")
+            break
+        default:
+            break
+        }
+    }
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        
+        print("in controllerDidChangeContent. changes.count: \(insertedIndexPaths.count + deletedIndexPaths.count)")
+        
+        myCollectionView.performBatchUpdates({() -> Void in
+            
+            for indexPath in self.insertedIndexPaths {
+                self.myCollectionView.insertItemsAtIndexPaths([indexPath])
+            }
+            
+            for indexPath in self.deletedIndexPaths {
+                self.myCollectionView.deleteItemsAtIndexPaths([indexPath])
+            }
+            
+            for indexPath in self.updatedIndexPaths {
+                self.myCollectionView.reloadItemsAtIndexPaths([indexPath])
+            }
+            
+            }, completion: nil)
+    }
+    
+    func configureCell(cell: InstagramImageCollectionViewCell, atIndexPath indexPath: NSIndexPath) {
+    
+        let image = fetchedResultsController.objectAtIndexPath(indexPath) as! Image
+        
+        if let imageView = image.imageView{
+            image.loadUpdateHandler = nil
+            cell.imageView.image = imageView
+        } else {
+            image.loadUpdateHandler = nil
+            
+            if let imageURL = NSURL(string: image.url) {
+                
+            }
+        }
+    
+    }
+    
+    
 }

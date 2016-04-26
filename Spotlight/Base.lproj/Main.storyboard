@@ -68,10 +68,10 @@
             </objects>
             <point key="canvasLocation" x="1734" y="1084"/>
         </scene>
-        <!--Collection View Controller-->
+        <!--Insta Collection View Controller-->
         <scene sceneID="BFT-mf-7It">
             <objects>
-                <collectionViewController storyboardIdentifier="InstaCollectionViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Nae-kI-oSt" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="InstaCollectionViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Nae-kI-oSt" customClass="InstaCollectionViewController" customModule="Spotlight" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="xZY-aS-wMK">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -82,21 +82,25 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="InstagramPictureCell" id="jCQ-gE-kUk">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="InstagramPictureCell" id="jCQ-gE-kUk" customClass="InstagramImageCollectionViewCell" customModule="Spotlight" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="261" height="261"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="261" height="261"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YCB-RJ-YEM">
+                                            <rect key="frame" x="0.0" y="0.0" width="261" height="261"/>
+                                        </imageView>
+                                    </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                             </collectionViewCell>
                         </cells>
-                        <connections>
-                            <outlet property="dataSource" destination="Nae-kI-oSt" id="10g-u0-xfZ"/>
-                            <outlet property="delegate" destination="Nae-kI-oSt" id="NU6-CG-vPm"/>
-                        </connections>
                     </collectionView>
+                    <connections>
+                        <outlet property="myCollectionView" destination="xZY-aS-wMK" id="rSz-qD-eBg"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oi4-PE-4mv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

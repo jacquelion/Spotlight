@@ -55,10 +55,10 @@ class Image : NSManagedObject {
         location = dictionary[Keys.Location] as? Location
     }
     
-    static func imagesFromResults(results: [[String: AnyObject]], location: Location) -> NSSet {
+    static func imagesFromImageURLArray(imageURLs: [String], location: Location) -> NSSet {
         var images = NSSet()
         var maxImages = 20 //Set as Constant: Constants.Instagram.MaxImages
-        let originalResultCount = results.count
+        let originalResultCount = imageURLs.count
         var countResults = 0
         var startCount = 0
         
@@ -69,11 +69,11 @@ class Image : NSManagedObject {
             startCount = Int(arc4random_uniform(UInt32(originalResultCount - maxImages)))
         }
         
-        for result in results {
+        for url in imageURLs {
             if(countResults < (maxImages + startCount) && countResults >= startCount) {
-                if let imageURL = NSURL(string: result[Keys.url] as! String) {
+                if let imageURL = NSURL(string: imageURLs[countResults] ) {
                     let imagePath = "/\(imageURL.lastPathComponent!)" ?? ""
-                    let filteredResult: [String : AnyObject] = [Keys.url : result[Keys.url]!, Keys.imagePath: imagePath, Keys.Location: location, Keys.id: countResults]
+                    let filteredResult: [String : AnyObject] = [Keys.url : url, Keys.imagePath: imagePath, Keys.Location: location, Keys.id: countResults]
     
                     dispatch_async(dispatch_get_main_queue()) {
                         images = images.setByAddingObject(Image(dictionary: filteredResult, context: CoreDataStackManager.sharedInstance().managedObjectContext))
@@ -84,6 +84,8 @@ class Image : NSManagedObject {
             }
             countResults += 1
         }
+        print("IMAGES: ", images)
+
         return images
     }
     
