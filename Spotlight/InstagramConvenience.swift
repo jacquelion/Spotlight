@@ -21,14 +21,14 @@ extension InstagramClient {
         getToken(hostViewController) { (success, errorString) in
             
             if success {
-                
-                self.getPicturesByLocation(hostViewController) { (success, errorString) in
-                    if (success) {
-                        //save access token
-                    } else {
-                        completionHandlerForAuth(success: success, errorString: errorString)
-                    }
-                }
+                completionHandlerForAuth(success: success, errorString: errorString)
+//                self.getPicturesByLocation(hostViewController) { (success, errorString) in
+//                    if (success) {
+//                        //save access token
+//                    } else {
+//                        completionHandlerForAuth(success: success, errorString: errorString)
+//                    }
+//                }
             } else {
                 completionHandlerForAuth(success: success, errorString: errorString)
             }
@@ -55,7 +55,7 @@ extension InstagramClient {
         
     }
     
-    func getPicturesByLocation(hostViewController: UIViewController, completionHandlerForLogin:(success: Bool, errorString: String?) -> Void) {
+    func getPicturesByLocation(location: Location, completionHandlerForLogin:(success: Bool, errorString: String?) -> Void) {
         
         var parameters = [String: AnyObject]()
         parameters["access_token"] = InstagramClient.sharedInstance.AccessToken
@@ -78,7 +78,7 @@ extension InstagramClient {
                     let alertController = UIAlertController(title: "No Results", message: "There are no pictures at the specified location. Please try a query at a different location.", preferredStyle: UIAlertControllerStyle.Alert)
                     alertController.addAction(UIAlertAction(title: "OK", style:UIAlertActionStyle.Default, handler: nil))
                     
-                    hostViewController.presentViewController(alertController, animated: true, completion: nil)
+                    //hostViewController.presentViewController(alertController, animated: true, completion: nil)
                 } else {
                     var count = 0
                     for dataDictionary in data {
@@ -113,17 +113,16 @@ extension InstagramClient {
                     print("IMAGE URL ARRAY: ", self.imageURLArray)
                     
                     //TODO: SET LOCATION
-                    let location = Location()
+                    //let location = Location()
                     
                     let images = Image.imagesFromImageURLArray(self.imageURLArray, location: location)
+                    
                     InstagramClient.sharedInstance.images = images
+                    
                     //TODO: Store Image in Cache
                     completionHandlerForLogin(success: true, errorString: nil)
                     
-                    let storyboard = UIStoryboard.init(name: "Main", bundle: NSBundle.mainBundle())
-                    let vc = storyboard.instantiateViewControllerWithIdentifier("InstaCollectionViewController") as! InstaCollectionViewController
-                    hostViewController.presentViewController(vc, animated: true, completion: nil)
-                    
+                                        
                 }
             }
         }

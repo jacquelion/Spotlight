@@ -18,6 +18,8 @@ class InstaCollectionViewController : UICollectionViewController, NSFetchedResul
     var deletedIndexPaths: [NSIndexPath]!
     var updatedIndexPaths: [NSIndexPath]!
     
+    var location: Location!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         myCollectionView.delegate = self
@@ -37,11 +39,13 @@ class InstaCollectionViewController : UICollectionViewController, NSFetchedResul
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        loadImages()
+        if (location.loadedPictures == false) {
+            loadImages(location)
+        }
     }
     
-    func loadImages(){
-        InstagramClient.sharedInstance.getPicturesByLocation(self) { result, error in
+    func loadImages(location: Location){
+        InstagramClient.sharedInstance.getPicturesByLocation(location) { result, error in
             if let error = error {
                 print(error)
             } else {

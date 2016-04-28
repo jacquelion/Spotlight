@@ -8,13 +8,15 @@
 
 import UIKit
 import CoreLocation
+import CoreData
 import MapKit
 
-class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
+class MapViewController: UIViewController, CLLocationManagerDelegate {
     
     var locationManager: CLLocationManager!
     var startLocation: CLLocation!
     var locationStatus : NSString = "Not Started"
+    var locations = [Location]()
     
     @IBOutlet weak var mapView: MKMapView!
     
@@ -35,11 +37,81 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         view.backgroundColor = UIColor.grayColor()
         // Do any additional setup after loading the view, typically from a nib.
+        loadMapAnnotations()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func loadMapAnnotations(){
+        locations = fetchAllLocations()
+        
+        for i in locations {
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = CLLocationCoordinate2D(latitude: i.latitude, longitude: i.longitude)
+            mapView.addAnnotation(annotation)
+        }
+    }
+    
+    func fetchAllLocations() -> [Location] {
+        let fetchRequest = NSFetchRequest(entityName: "Location")
+        do {
+            print("Fetch Request: \(fetchRequest)")
+            return try sharedContext.executeFetchRequest(fetchRequest) as! [Location]
+        } catch let error as NSError {
+            print("Error in fetchAllLocations(): \(error)")
+            return [Location]()
+        }
+    }
+    
+    //MARK: - Core Data Convenience
+    var sharedContext: NSManagedObjectContext {
+        return CoreDataStackManager.sharedInstance().managedObjectContext
+    }
+    
+    // MARK: - Save the zoom level helpers
+    
+    // A convenient property
+    var filePath : String {
+        let manager = NSFileManager.defaultManager()
+        let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! as NSURL
+        return url.URLByAppendingPathComponent("mapRegionArchive").path!
+    }
+    
+    func saveMapRegion() {
+        
+        // Place the "center" and "span" of the map into a dictionary
+        // The "span" is the width and height of the map in degrees.
+        // It represents the zoom level of the map.
+        
+        let dictionary = [
+            "latitude" : mapView.region.center.latitude,
+            "longitude" : mapView.region.center.longitude,
+            "latitudeDelta" : mapView.region.span.latitudeDelta,
+            "longitudeDelta" : mapView.region.span.longitudeDelta
+        ]
+        
+        // Archive the dictionary into the filePath
+        NSKeyedArchiver.archiveRootObject(dictionary, toFile: filePath)
+    }
+    
+    func restoreMapRegion(animated: Bool) {
+        
+        // if we can unarchive a dictionary, we will use it to set the map back to its
+        // previous center and span
+        if let regionDictionary = NSKeyedUnarchiver.unarchiveObjectWithFile(filePath) as? [String : AnyObject] {
+            
+            let longitude = regionDictionary["longitude"] as! CLLocationDegrees
+            let latitude = regionDictionary["latitude"] as! CLLocationDegrees
+            let center = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            
+            let longitudeDelta = regionDictionary["latitudeDelta"] as! CLLocationDegrees
+            let latitudeDelta = regionDictionary["longitudeDelta"] as! CLLocationDegrees
+            let span = MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta)
+            
+            let savedRegion = MKCoordinateRegion(center: center, span: span)
+            
+            print("lat: \(latitude), lon: \(longitude), latD: \(latitudeDelta), lonD: \(longitudeDelta)")
+            
+            mapView.setRegion(savedRegion, animated: animated)
+        }
     }
     
     //MARK: - CLLocationManagerDelegate
@@ -55,12 +127,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         print("latestLocation: ", latestLocation)
         let coord = newLocation
-       // print("COORD: ", coord)
+        // print("COORD: ", coord)
         
         let latitude = coord.coordinate.latitude
         let longitude = coord.coordinate.longitude
-       // print("Latitude: ", latitude)
-       // print("Longitude", longitude)
+        // print("Latitude: ", latitude)
+        // print("Longitude", longitude)
         
         if startLocation == nil {
             startLocation = newLocation
@@ -68,7 +140,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         updateMapLocation(newLocation)
         locationManager.stopUpdatingLocation()
-
+        
         
     }
     
@@ -93,61 +165,58 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         //Add Annotation to Map
         let latitude = Double(location.coordinate.latitude)
         let longitude = Double(location.coordinate.longitude)
-       // print("Longitude: ", longitude, ", Latitude: ", latitude)
+        // print("Longitude: ", longitude, ", Latitude: ", latitude)
         let annotation = MKPointAnnotation()
         annotation.coordinate = location.coordinate
         mapView.addAnnotation(annotation)
         print("Added Annotation: ", annotation)
+        
+        var dictionary = [String : AnyObject]()
+        
+        dictionary[Location.Keys.Latitude] = latitude
+        dictionary[Location.Keys.Longitude] = longitude
+        
+        let locationToBeAdded = Location(dictionary: dictionary, context: sharedContext)
+        
+        self.locations.append(locationToBeAdded)
+        CoreDataStackManager.sharedInstance().saveContext()
+        
+    }
+}
+
+//MARK: - MapView Delegate
+
+extension MapViewController : MKMapViewDelegate {
+    
+    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        saveMapRegion()
     }
     
-    //MARK: - MapView Delegate
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView){
+        let latitude = (view.annotation?.coordinate.latitude)!
+        let longitude = (view.annotation?.coordinate.longitude)!
         
         if (InstagramClient.sharedInstance.AccessToken == nil) {
-        InstagramClient.sharedInstance.authenticateWithViewController(self) { (success, errorString) in
-            performUIUpdatesOnMain{
-                if success {
-                    print("SUCCESS on Access Token!")
-                } else {
-                    print("ERROR on Access Token: ", errorString)
-                }
-            }
-        }
-        } else {
-            InstagramClient.sharedInstance.getPicturesByLocation(self) {
-            (success, errorString) in
+            InstagramClient.sharedInstance.authenticateWithViewController(self) { (success, errorString) in
                 performUIUpdatesOnMain{
                     if success {
-                        print("SUCCESS on Picures by Location!")
+                        print("SUCCESS on Access Token!")
                     } else {
-                        print("ERROR on Picures by Location: ", errorString)
+                        print("ERROR on Access Token: ", errorString)
                     }
                 }
             }
         }
-//        let coordinate = view.annotation?.coordinate
-//        
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        
-//        let vc = storyboard.instantiateViewControllerWithIdentifier("InstaAuthViewController") as! InstaAuthViewController
-//        
-//        let urlString = "https://api.instagram.com/oauth/authorize/?client_id=60e0fe0b74e849ec83f81f18b781b88f&redirect_uri=https://www.instagram.com/&response_type=token"
-//        let url = NSURL(string: urlString)
-//        let request = NSURLRequest(URL: url!)
-//        vc.urlRequest = request
         
-        //vc.latitude = (view.annotation?.coordinate.latitude)!
-        //vc.longitude = (view.annotation?.coordinate.longitude)!
-        //vc.latitudeDelta = self.mapView.region.span.latitudeDelta
-        //vc.longitudeDelta = self.mapView.region.span.longitudeDelta
+        let storyboard = UIStoryboard.init(name: "Main", bundle: NSBundle.mainBundle())
+        let vc = storyboard.instantiateViewControllerWithIdentifier("InstaCollectionViewController") as! InstaCollectionViewController
+        for location in self.locations {
+            if location.latitude == latitude && location.longitude == longitude {
+                vc.location = location
+                break
+            }
+        }
         
-//        for location in locations {
-//            if location.latitude == (coordinate!.latitude) && location.longitude == (coordinate!.longitude) {
-//                vc.location = location
-//                break
-//            }
-//        }
-        
-//        self.presentViewController(vc, animated: true, completion: nil)
+        self.presentViewController(vc, animated: true, completion: nil)
     }
 }
