@@ -10,9 +10,10 @@ import Foundation
 import UIKit
 import CoreData
 
-class InstaCollectionViewController : UICollectionViewController, NSFetchedResultsControllerDelegate {
+class InstaCollectionViewController : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, NSFetchedResultsControllerDelegate {
     //MARK: - Collection View Outlets
-    @IBOutlet var myCollectionView: UICollectionView!
+   
+    @IBOutlet weak var myCollectionView: UICollectionView!
     
     var insertedIndexPaths: [NSIndexPath]!
     var deletedIndexPaths: [NSIndexPath]!
@@ -65,7 +66,7 @@ class InstaCollectionViewController : UICollectionViewController, NSFetchedResul
     lazy var fetchedResultsController: NSFetchedResultsController = {
         let fetchRequest = NSFetchRequest(entityName: "Image")
         
-        fetchRequest.sortDescriptors = []
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key:"id", ascending: true)]
         //fetchRequest.predicate = NSPredicate(format: "location == %@", self.location)
         
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
@@ -79,13 +80,13 @@ class InstaCollectionViewController : UICollectionViewController, NSFetchedResul
     let reuseIdentifier = "InstagramPictureCell"
     
     //MARK: - UICollectionViewDataSource Protocol
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let sectionInfo = self.fetchedResultsController.sections![section]
-        print(sectionInfo.numberOfObjects)
+        print("Number of ItemsInSection: ", sectionInfo.numberOfObjects)
         return sectionInfo.numberOfObjects
     }
     
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = myCollectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! InstagramImageCollectionViewCell
         
         configureCell(cell, atIndexPath: indexPath)
@@ -158,7 +159,39 @@ class InstaCollectionViewController : UICollectionViewController, NSFetchedResul
             image.loadUpdateHandler = nil
             
             if let imageURL = NSURL(string: image.url) {
-                
+                InstagramClient.sharedInstance.taskForImage(imageURL) { data, error in
+                    if let error = error {
+                        print("error downloading photos from imageURL: \(imageURL) \(error.localizedDescription)")
+                        dispatch_async(dispatch_get_main_queue()){
+                            image.loadUpdateHandler = nil
+                            print("NO IMAGE LINE 166")
+                            //cell.imageView.image = UIImage(named: "pictureNoImage")
+                            //cell.cellSpinner.stopAnimating()
+                        }
+                    }
+                    else {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            
+                            if let imageFromData = UIImage(data: data!)
+                            {
+                                image.loadUpdateHandler = { [unowned self] () -> Void in
+                                    dispatch_async(dispatch_get_main_queue(), {
+                                        self.myCollectionView!.reloadItemsAtIndexPaths([indexPath])
+                                        // cell.cellSpinner.hidden = true
+                                    })
+                                }
+                                image.imageView = imageFromData
+                            }
+                            else
+                            {
+                                image.loadUpdateHandler = nil
+                                print("NO IMAGE LINE 187")
+                                //cell.imageView.image = UIImage(named: "pictureNoImage")
+                                //cell.cellSpinner.stopAnimating()
+                            }
+                        }
+                    }
+                }
             }
         }
     

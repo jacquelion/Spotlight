@@ -32,6 +32,79 @@
             </objects>
             <point key="canvasLocation" x="1734" y="429"/>
         </scene>
+        <!--Insta Collection View Controller-->
+        <scene sceneID="2y8-H0-wRp">
+            <objects>
+                <viewController storyboardIdentifier="InstaCollectionViewController" id="Te5-cM-5ln" customClass="InstaCollectionViewController" customModule="Spotlight" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="fNq-YD-r83"/>
+                        <viewControllerLayoutGuide type="bottom" id="e0e-PQ-RwG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="DuA-jN-lRo">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="935-4Y-bpU">
+                                <rect key="frame" x="0.0" y="201" width="600" height="193"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="193" id="C1R-aq-db2"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="9hG-UJ-lvd">
+                                    <size key="itemSize" width="193" height="193"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="InstagramPictureCell" id="0dx-8h-bv7" customClass="InstagramImageCollectionViewCell" customModule="Spotlight" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="193" height="193"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="193" height="193"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6ST-zN-5Ib">
+                                                    <rect key="frame" x="0.0" y="0.0" width="193" height="193"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="Te5-cM-5ln" id="fK3-AU-0lB"/>
+                                    <outlet property="delegate" destination="Te5-cM-5ln" id="VzR-Bp-0ox"/>
+                                </connections>
+                            </collectionView>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DOT-yb-flB">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                <items>
+                                    <navigationItem id="Eot-3Q-6lf">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="0Tp-Fp-7N1"/>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="DOT-yb-flB" secondAttribute="trailing" id="84E-lA-Lqf"/>
+                            <constraint firstItem="e0e-PQ-RwG" firstAttribute="top" secondItem="935-4Y-bpU" secondAttribute="bottom" constant="162" id="IQW-Yy-JAF"/>
+                            <constraint firstItem="DOT-yb-flB" firstAttribute="top" secondItem="DuA-jN-lRo" secondAttribute="top" id="KGE-Tf-Wks"/>
+                            <constraint firstItem="935-4Y-bpU" firstAttribute="leading" secondItem="DOT-yb-flB" secondAttribute="leading" id="PHK-aK-fg5"/>
+                            <constraint firstItem="DOT-yb-flB" firstAttribute="leading" secondItem="DuA-jN-lRo" secondAttribute="leading" id="iaN-s8-1RU"/>
+                            <constraint firstItem="935-4Y-bpU" firstAttribute="trailing" secondItem="DOT-yb-flB" secondAttribute="trailing" id="xYg-BP-nSt"/>
+                        </constraints>
+                    </view>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="myCollectionView" destination="935-4Y-bpU" id="liG-UC-7zd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nYg-Cp-j40" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2401" y="429"/>
+        </scene>
         <!--Insta Auth View Controller-->
         <scene sceneID="0u7-68-Xz5">
             <objects>
@@ -68,10 +141,10 @@
             </objects>
             <point key="canvasLocation" x="1734" y="1084"/>
         </scene>
-        <!--Insta Collection View Controller-->
+        <!--Collection View Controller-->
         <scene sceneID="BFT-mf-7It">
             <objects>
-                <collectionViewController storyboardIdentifier="InstaCollectionViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Nae-kI-oSt" customClass="InstaCollectionViewController" customModule="Spotlight" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="OLD - InstaCollectionViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Nae-kI-oSt" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="xZY-aS-wMK">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -95,6 +168,9 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <connections>
+                                    <outlet property="imageView" destination="YCB-RJ-YEM" id="DiU-68-VZN"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                     </collectionView>
@@ -104,7 +180,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oi4-PE-4mv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2365" y="427"/>
+            <point key="canvasLocation" x="3103" y="429"/>
         </scene>
         <!--My Map-->
         <scene sceneID="tne-QT-ifu">

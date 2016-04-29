@@ -77,6 +77,7 @@ class Image : NSManagedObject {
     
                     dispatch_async(dispatch_get_main_queue()) {
                         images = images.setByAddingObject(Image(dictionary: filteredResult, context: CoreDataStackManager.sharedInstance().managedObjectContext))
+                        print("IMAGES: ", images)
                     }
                 } else {
                     print("Could not convert photo url to NSURL from photo results.")
@@ -84,7 +85,6 @@ class Image : NSManagedObject {
             }
             countResults += 1
         }
-        print("IMAGES: ", images)
 
         return images
     }
