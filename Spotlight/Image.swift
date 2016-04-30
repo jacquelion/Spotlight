@@ -35,7 +35,7 @@ class Image : NSManagedObject {
             if (NSFileManager.defaultManager().fileExistsAtPath(path)) {
                 do {
                     //delete from Cache
-                    InstagramClient.Caches.imageCache.deleteImage(imageView, withIdentifier: path)
+                    InstagramClient.Caches.imageCache.storeImage(imageView, withIdentifier: path)
                 } catch {
                     NSLog("Could not delete photo at \(path): \(error)")
                 }

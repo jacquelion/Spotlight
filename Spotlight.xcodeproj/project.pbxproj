@@ -73,8 +73,8 @@
 			isa = PBXGroup;
 			children = (
 				6D26A21C1CCBE0550073FF3F /* InstagramClient.swift */,
-				6D0E365D1CCDC5F000CC654A /* ImageCache.swift */,
 				6D26A21E1CCBE0600073FF3F /* InstagramConvenience.swift */,
+				6D0E365D1CCDC5F000CC654A /* ImageCache.swift */,
 				6D26A2201CCBE1360073FF3F /* Constants.swift */,
 				6D0E36591CCDAAB600CC654A /* Image.swift */,
 				6D0E365B1CCDAAC500CC654A /* Location.swift */,

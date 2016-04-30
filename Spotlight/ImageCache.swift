@@ -39,17 +39,6 @@ class ImageCache {
     func storeImage(image: UIImage?, withIdentifier identifier: String) {
         let path = pathForIdentifier(identifier)
         
-        //Keep image in memory (Image Cache)
-        inMemoryCache.setObject(image!, forKey: path)
-        //And store in documents directory
-        let data = UIImagePNGRepresentation(image!)!
-        data.writeToFile(path, atomically: true)
-    }
-    
-    //MARK: - Delete Image
-    func deleteImage(image: UIImage?, withIdentifier identifier: String) {
-        let path = pathForIdentifier(identifier)
-
         if image == nil {
             inMemoryCache.removeObjectForKey(path)
             
@@ -58,8 +47,29 @@ class ImageCache {
             } catch {
                 print("Coudl not remove item at path: \(path)")
             }
+            return
         }
+        //Keep image in memory (Image Cache)
+        inMemoryCache.setObject(image!, forKey: path)
+        //And store in documents directory
+        let data = UIImagePNGRepresentation(image!)!
+        data.writeToFile(path, atomically: true)
     }
+    
+    //MARK: - Delete Image
+//    func deleteImage(image: UIImage?, withIdentifier identifier: String) {
+//        let path = pathForIdentifier(identifier)
+//
+//        if image == nil {
+//            inMemoryCache.removeObjectForKey(path)
+//            
+//            do {
+//                try NSFileManager.defaultManager().removeItemAtPath(path)
+//            } catch {
+//                print("Coudl not remove item at path: \(path)")
+//            }
+//        }
+//    }
 
     //MARK: - Helper
     func pathForIdentifier(identifier: String) -> String {

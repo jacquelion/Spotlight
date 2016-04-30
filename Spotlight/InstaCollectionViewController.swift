@@ -9,18 +9,48 @@
 import Foundation
 import UIKit
 import CoreData
+import MapKit
 
-class InstaCollectionViewController : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, NSFetchedResultsControllerDelegate {
+class InstaCollectionViewController : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, NSFetchedResultsControllerDelegate, MKMapViewDelegate {
     //MARK: - Collection View Outlets
    
     @IBOutlet weak var myCollectionView: UICollectionView!
+    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var shareButton: UIBarButtonItem!
     
+    //Hold indexes of selected cells
+    var selectedIndexes = [NSIndexPath]()
+    //Track when cells are inserted, deleted, or updated
     var insertedIndexPaths: [NSIndexPath]!
     var deletedIndexPaths: [NSIndexPath]!
     var updatedIndexPaths: [NSIndexPath]!
     
     var location: Location!
     
+    //Set default map view
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
+    var longitudeDelta: Double = 0.0
+    var latitudeDelta: Double = 0.0
+    
+    //TODO: Add Sharing Capabilites via
+    
+    @IBAction func refreshPictures(sender: AnyObject) {
+        //mySpinner.startAnimating()
+        if let fetchedObjects = self.fetchedResultsController.fetchedObjects {
+            for object in fetchedObjects{
+                let image = object as! Image
+                self.sharedContext.deleteObject(image)
+            }
+            CoreDataStackManager.sharedInstance().saveContext()
+        }
+        loadImages(self.location)
+
+    }
+    
+    @IBAction func done(sender: UIBarButtonItem) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         myCollectionView.delegate = self
@@ -32,6 +62,8 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
             try fetchedResultsController.performFetch()
         } catch{}
         
+        loadMapView()
+        
         if let documentsPath = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first?.path {
             print("DOCUMENTS PATH: ", documentsPath) // "var/folder/.../documents\n" copy the full path
         }
@@ -40,10 +72,28 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        print("Location already loaded pictures? ", location.loadedPictures)
         if (location.loadedPictures == false) {
             loadImages(location)
         }
     }
+    
+    //Layout the collection view
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        // Lay out the collection view so that cells take up 1/3 of the width,
+        // with no space in between.
+        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 0
+        
+        let width = floor(self.myCollectionView.frame.size.width/2)
+        layout.itemSize = CGSize(width: width, height: width)
+        myCollectionView.collectionViewLayout = layout
+    }
+    
     
     func loadImages(location: Location){
         InstagramClient.sharedInstance.getPicturesByLocation(location) { result, error in
@@ -57,6 +107,21 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
         }
     }
     
+    
+    func loadMapView() {
+        let center = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        let span = MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longitudeDelta)
+        let savedRegion = MKCoordinateRegion(center: center, span: span)
+        print("lat: \(latitude), lon: \(longitude), latD: \(latitudeDelta), lonD: \(longitudeDelta)")
+        mapView.setRegion(savedRegion, animated: true)
+        
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = center
+        mapView.addAnnotation(annotation)
+    }
+    
+
+    
     //MARK: - Core Data Convenience
     var sharedContext: NSManagedObjectContext {
         return CoreDataStackManager.sharedInstance().managedObjectContext
@@ -67,7 +132,7 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
         let fetchRequest = NSFetchRequest(entityName: "Image")
         
         fetchRequest.sortDescriptors = [NSSortDescriptor(key:"id", ascending: true)]
-        //fetchRequest.predicate = NSPredicate(format: "location == %@", self.location)
+        fetchRequest.predicate = NSPredicate(format: "location == %@", self.location)
         
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                                   managedObjectContext: self.sharedContext,
@@ -87,12 +152,37 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = myCollectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! InstagramImageCollectionViewCell
+        let cell = self.myCollectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! InstagramImageCollectionViewCell
         
         configureCell(cell, atIndexPath: indexPath)
         
         return cell
     }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        shareButton.enabled = false
+        //User can select and deselect on tap
+        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+        
+        let cell = collectionView.cellForItemAtIndexPath(indexPath) as! InstagramImageCollectionViewCell
+        
+        if let index = selectedIndexes.indexOf(indexPath) {
+            cell.layer.opacity = 1.0
+            selectedIndexes.removeAtIndex(index)
+        } else {
+            cell.layer.opacity = 0.2
+            selectedIndexes.append(indexPath)
+        }
+        
+        if (selectedIndexes.count > 0) {
+            shareButton.enabled = true
+        } else {
+            shareButton.enabled = false
+        }
+        
+    }
+
     
     //MARK: - Fetched Results Controller Delegate
     func controllerWillChangeContent(controller: NSFetchedResultsController) {

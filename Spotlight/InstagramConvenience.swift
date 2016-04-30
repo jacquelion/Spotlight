@@ -22,13 +22,6 @@ extension InstagramClient {
             
             if success {
                 completionHandlerForAuth(success: success, errorString: errorString)
-//                self.getPicturesByLocation(hostViewController) { (success, errorString) in
-//                    if (success) {
-//                        //save access token
-//                    } else {
-//                        completionHandlerForAuth(success: success, errorString: errorString)
-//                    }
-//                }
             } else {
                 completionHandlerForAuth(success: success, errorString: errorString)
             }
@@ -52,19 +45,22 @@ extension InstagramClient {
             hostViewController.presentViewController(webAuthNavigationController, animated: true, completion: nil)
         }
         
-        
     }
     
     func getPicturesByLocation(location: Location, completionHandlerForLogin:(success: Bool, errorString: String?) -> Void) {
         
         var parameters = [String: AnyObject]()
         parameters["access_token"] = InstagramClient.sharedInstance.AccessToken
-        parameters["count"] = 5
+        //parameters["count"] = 5
+        parameters[InstagramClient.ParameterKeys.lat] = location.latitude
+        parameters[InstagramClient.ParameterKeys.long] = location.longitude
+        parameters["distance"] = 5000
         
-        taskForGETMethod("users/self/media/recent/", parameters: parameters) { (results, error) in
+        taskForGETMethod(InstagramClient.Methods.Search, parameters: parameters) { (results, error) in
+        //taskForGETMethod("users/self/media/recent/", parameters: parameters) { (results, error) in
             if let error = error {
                 print(error)
-                //completionHandlerForAuth(success: false, errorString: "Could not get pictures by location.")
+                completionHandlerForLogin(success: false, errorString: "Could not get pictures by location.")
             } else {
                 //print("RESULTS: ", results)
                 guard let data = results["data"] as? [[String: AnyObject]] else {
@@ -112,14 +108,10 @@ extension InstagramClient {
                     }
                     print("IMAGE URL ARRAY: ", self.imageURLArray)
                     
-                    //TODO: SET LOCATION
-                    //let location = Location()
-                    
                     let images = Image.imagesFromImageURLArray(self.imageURLArray, location: location)
                     
                     InstagramClient.sharedInstance.images = images
                     
-                    //TODO: Store Image in Cache
                     completionHandlerForLogin(success: true, errorString: nil)
                     
                                         

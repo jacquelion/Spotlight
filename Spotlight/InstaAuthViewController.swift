@@ -62,6 +62,7 @@ extension InstaAuthViewController : UIWebViewDelegate {
             if key == "access_token" {
                 accessToken = value
                 InstagramClient.sharedInstance.AccessToken = accessToken
+                saveAccessToken(accessToken)
                 print("ACCESS TOKEN: ", accessToken)
                 //TODO: Make request with location
             }
@@ -80,6 +81,20 @@ extension InstaAuthViewController : UIWebViewDelegate {
                 self.completionHandlerForView!(success: true, errorString: nil)
             }
         }
+    }
+    
+    // A convenient property
+    var filePath : String {
+        let manager = NSFileManager.defaultManager()
+        let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! as NSURL
+        return url.URLByAppendingPathComponent("accessTokenArchive").path!
+    }
+    
+    func saveAccessToken(accessToken: String){
+        let dictionary = [
+            "accessToken" : accessToken
+        ]
+        NSKeyedArchiver.archiveRootObject(dictionary, toFile: filePath)
     }
 
 }

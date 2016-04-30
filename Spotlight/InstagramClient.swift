@@ -8,11 +8,6 @@
 
 import Foundation
 
-//var requestString = "https://api.instagram.com/v1/media/search?lat=48.858844&lng=2.294351&access_token=\(accessToken)"
-//var requestURL = NSURL(string: requestString)
-//var request = NSURLRequest(URL: requestURL!)
-//webView.loadRequest(NSURLRequest)
-
 //MARK: - InstagramClient : NSObject
 
 class InstagramClient : NSObject {
@@ -41,10 +36,12 @@ class InstagramClient : NSObject {
         //Set Parameters
         var url = instagramURLFromParameters(parameters, withPathExtension: method)
         print("REQUEST URL: ", url)
+        //var urlString = String(url)
+        //print("REQUEST URL STRING: ", url)
         
-        var urlString = "https://api.instagram.com/v1/users/self/media/recent/?access_token=\(Constants.AccessToken)"
+        //var urlString = "https://api.instagram.com/v1/users/self/media/recent/?access_token=\(Constants.AccessToken)"
         //"https://api.instagram.com/v1/users/self/?access_token=231432668.60e0fe0.ad3d167b242c4ba1b58a7031c843dcae"
-        //var urlString = "https://api.instagram.com/v1/media/search?lat=35.1107&lng=-106.61&distance=5000&access_token=231432668.60e0fe0.ad3d167b242c4ba1b58a7031c843dcae"
+        var urlString = "https://api.instagram.com/v1/media/search?lat=35.1107&lng=-106.61&distance=5000&access_token=231432668.60e0fe0.ad3d167b242c4ba1b58a7031c843dcae"
         
         var urlRequest = NSURL(string: urlString)
         
@@ -58,10 +55,6 @@ class InstagramClient : NSObject {
                 let userInfo = [NSLocalizedDescriptionKey : error]
                 completionHandlerForGET(result: nil, error: NSError(domain: "taskForGETMethod", code: 1, userInfo: userInfo))
             }
-            
-            //print("Data: ", data)
-            //print("Response: ", response)
-            //print("Error: ", error)
             
             /* GUARD: Was there an error? */
             guard (error == nil) else {
@@ -90,7 +83,6 @@ class InstagramClient : NSObject {
         task.resume()
         
         return task
-        
     }
     
     //MARK: POST

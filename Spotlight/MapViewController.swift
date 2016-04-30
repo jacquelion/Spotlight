@@ -38,6 +38,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         view.backgroundColor = UIColor.grayColor()
         // Do any additional setup after loading the view, typically from a nib.
         loadMapAnnotations()
+        restoreAccessToken()
     }
     
     func loadMapAnnotations(){
@@ -114,6 +115,20 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
+    var accessTokenFilePath : String {
+        let manager = NSFileManager.defaultManager()
+        let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! as NSURL
+        return url.URLByAppendingPathComponent("accessTokenArchive").path!
+    }
+
+    
+    func restoreAccessToken() {
+        if let accessTokenDictionary = NSKeyedUnarchiver.unarchiveObjectWithFile(accessTokenFilePath) as? [String: AnyObject] {
+            let accessToken = accessTokenDictionary["accessToken"] as! String
+            InstagramClient.sharedInstance.AccessToken = accessToken
+        }
+    }
+    
     //MARK: - CLLocationManagerDelegate
     // If failed
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
@@ -127,21 +142,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         
         print("latestLocation: ", latestLocation)
         let coord = newLocation
-        // print("COORD: ", coord)
         
         let latitude = coord.coordinate.latitude
         let longitude = coord.coordinate.longitude
-        // print("Latitude: ", latitude)
-        // print("Longitude", longitude)
-        
+       
         if startLocation == nil {
             startLocation = newLocation
         }
         
         updateMapLocation(newLocation)
         locationManager.stopUpdatingLocation()
-        
-        
     }
     
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
@@ -196,20 +206,30 @@ extension MapViewController : MKMapViewDelegate {
         let latitude = (view.annotation?.coordinate.latitude)!
         let longitude = (view.annotation?.coordinate.longitude)!
         
-        if (InstagramClient.sharedInstance.AccessToken == nil) {
+        if (InstagramClient.sharedInstance.AccessToken != nil) {
+            segueToCollectionView(latitude, longitude: longitude)
+        } else {
             InstagramClient.sharedInstance.authenticateWithViewController(self) { (success, errorString) in
                 performUIUpdatesOnMain{
                     if success {
                         print("SUCCESS on Access Token!")
+                        self.segueToCollectionView(latitude, longitude: longitude)
                     } else {
                         print("ERROR on Access Token: ", errorString)
                     }
                 }
             }
         }
-        
+    }
+    
+    func segueToCollectionView(latitude: Double, longitude: Double){
         let storyboard = UIStoryboard.init(name: "Main", bundle: NSBundle.mainBundle())
         let vc = storyboard.instantiateViewControllerWithIdentifier("InstaCollectionViewController") as! InstaCollectionViewController
+        vc.latitude = latitude
+        vc.longitude = longitude
+        vc.latitudeDelta = self.mapView.region.span.latitudeDelta
+        vc.longitudeDelta = self.mapView.region.span.longitudeDelta
+        
         for location in self.locations {
             if location.latitude == latitude && location.longitude == longitude {
                 vc.location = location
@@ -218,5 +238,6 @@ extension MapViewController : MKMapViewDelegate {
         }
         
         self.presentViewController(vc, animated: true, completion: nil)
+
     }
 }

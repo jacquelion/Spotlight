@@ -10,7 +10,7 @@ import UIKit
 
 class InstagramImageCollectionViewCell : UICollectionViewCell {
 
-    @IBOutlet weak var imageView : UIImageView!
+    @IBOutlet weak var imageView: UIImageView!
     
     var imageName: String = ""
     
