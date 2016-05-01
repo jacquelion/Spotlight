@@ -36,12 +36,12 @@ class InstagramClient : NSObject {
         //Set Parameters
         var url = instagramURLFromParameters(parameters, withPathExtension: method)
         print("REQUEST URL: ", url)
-        //var urlString = String(url)
+        var urlString = String(url)
         //print("REQUEST URL STRING: ", url)
         
         //var urlString = "https://api.instagram.com/v1/users/self/media/recent/?access_token=\(Constants.AccessToken)"
         //"https://api.instagram.com/v1/users/self/?access_token=231432668.60e0fe0.ad3d167b242c4ba1b58a7031c843dcae"
-        var urlString = "https://api.instagram.com/v1/media/search?lat=35.1107&lng=-106.61&distance=5000&access_token=231432668.60e0fe0.ad3d167b242c4ba1b58a7031c843dcae"
+        //var urlString = "https://api.instagram.com/v1/media/search?lat=35.1107&lng=-106.61&distance=5000&access_token=231432668.60e0fe0.ad3d167b242c4ba1b58a7031c843dcae"
         
         var urlRequest = NSURL(string: urlString)
         

@@ -11,6 +11,7 @@ import UIKit
 class InstagramImageCollectionViewCell : UICollectionViewCell {
 
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var cellSpinner: UIActivityIndicatorView!
     
     var imageName: String = ""
     

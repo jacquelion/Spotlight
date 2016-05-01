@@ -47,7 +47,7 @@ extension InstagramClient {
         
     }
     
-    func getPicturesByLocation(location: Location, completionHandlerForLogin:(success: Bool, errorString: String?) -> Void) {
+    func getPicturesByLocation(hostViewController: UIViewController, location: Location, completionHandlerForLogin:(success: Bool, errorString: String?) -> Void) {
         
         var parameters = [String: AnyObject]()
         parameters["access_token"] = InstagramClient.sharedInstance.AccessToken
@@ -74,7 +74,7 @@ extension InstagramClient {
                     let alertController = UIAlertController(title: "No Results", message: "There are no pictures at the specified location. Please try a query at a different location.", preferredStyle: UIAlertControllerStyle.Alert)
                     alertController.addAction(UIAlertAction(title: "OK", style:UIAlertActionStyle.Default, handler: nil))
                     
-                    //hostViewController.presentViewController(alertController, animated: true, completion: nil)
+                    hostViewController.presentViewController(alertController, animated: true, completion: nil)
                 } else {
                     var count = 0
                     for dataDictionary in data {

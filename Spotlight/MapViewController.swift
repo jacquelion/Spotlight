@@ -17,8 +17,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     var startLocation: CLLocation!
     var locationStatus : NSString = "Not Started"
     var locations = [Location]()
+    var longitude : Double = 0.0
+    var latitude : Double = 0.0
     
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var mySpinner: UIActivityIndicatorView!
+    
     
     @IBAction func findMeButtonPressed(sender: AnyObject) {
         locationManager.startUpdatingLocation()
@@ -36,6 +40,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         mapView.delegate = self
         
         view.backgroundColor = UIColor.grayColor()
+        
+        //enable long press to drop a pin
+        let uilgr = UILongPressGestureRecognizer(target: self, action: #selector(MapViewController.addAnnotation(_:)))
+        uilgr.minimumPressDuration = 0.8
+        mapView.addGestureRecognizer(uilgr)
+        
+        mySpinner.startAnimating()
+        view.alpha = 0.5
+        
+        
         // Do any additional setup after loading the view, typically from a nib.
         loadMapAnnotations()
         restoreAccessToken()
@@ -120,7 +134,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         let url = manager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first! as NSURL
         return url.URLByAppendingPathComponent("accessTokenArchive").path!
     }
-
+    
     
     func restoreAccessToken() {
         if let accessTokenDictionary = NSKeyedUnarchiver.unarchiveObjectWithFile(accessTokenFilePath) as? [String: AnyObject] {
@@ -145,7 +159,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         
         let latitude = coord.coordinate.latitude
         let longitude = coord.coordinate.longitude
-       
+        
         if startLocation == nil {
             startLocation = newLocation
         }
@@ -192,7 +206,38 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         CoreDataStackManager.sharedInstance().saveContext()
         
     }
+    
+    //MARK: -Drop A Pin Functions
+    func addAnnotation(gestureRecognizer:UIGestureRecognizer){
+        switch gestureRecognizer.state {
+        case .Began:
+            let touchPoint = gestureRecognizer.locationInView(mapView)
+            let newCoordinates = mapView.convertPoint(touchPoint, toCoordinateFromView: mapView)
+            latitude = Double(newCoordinates.latitude)
+            longitude = Double(newCoordinates.longitude)
+            print("Longitude: ", longitude, ", Latitude: ", latitude)
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = newCoordinates
+            mapView.addAnnotation(annotation)
+            
+        case .Ended:
+            
+            //CORE DATA
+            var dictionary = [String : AnyObject]()
+            
+            dictionary[Location.Keys.Latitude] = latitude
+            dictionary[Location.Keys.Longitude] = longitude
+            
+            let locationToBeAdded = Location(dictionary: dictionary, context: sharedContext)
+            
+            self.locations.append(locationToBeAdded)
+            CoreDataStackManager.sharedInstance().saveContext()
+        default:
+            break
+        }
+    }
 }
+
 
 //MARK: - MapView Delegate
 
@@ -238,6 +283,12 @@ extension MapViewController : MKMapViewDelegate {
         }
         
         self.presentViewController(vc, animated: true, completion: nil)
-
     }
+    
+    func mapViewDidFinishRenderingMap(mapView: MKMapView, fullyRendered: Bool) {
+        mySpinner.hidden = true
+        mySpinner.stopAnimating()
+        view.alpha = 1.0
+    }
+
 }

@@ -79,24 +79,24 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
     }
     
     //Layout the collection view
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        // Lay out the collection view so that cells take up 1/3 of the width,
-        // with no space in between.
-        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        
-        let width = floor(self.myCollectionView.frame.size.width/2)
-        layout.itemSize = CGSize(width: width, height: width)
-        myCollectionView.collectionViewLayout = layout
-    }
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        
+//        // Lay out the collection view so that cells take up 1/3 of the width,
+//        // with no space in between.
+//        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+//        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+//        layout.minimumLineSpacing = 0
+//        layout.minimumInteritemSpacing = 0
+//        
+//        let width = floor(self.myCollectionView.frame.size.width/2)
+//        layout.itemSize = CGSize(width: width, height: width)
+//        myCollectionView.collectionViewLayout = layout
+//    }
     
     
     func loadImages(location: Location){
-        InstagramClient.sharedInstance.getPicturesByLocation(location) { result, error in
+        InstagramClient.sharedInstance.getPicturesByLocation(self, location: location) { result, error in
             if let error = error {
                 print(error)
             } else {
@@ -247,6 +247,9 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
             cell.imageView.image = imageView
         } else {
             image.loadUpdateHandler = nil
+            cell.imageView.image = UIImage(named: "imagePlaceholder")
+            cell.cellSpinner.startAnimating()
+
             
             if let imageURL = NSURL(string: image.url) {
                 InstagramClient.sharedInstance.taskForImage(imageURL) { data, error in
@@ -254,9 +257,8 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
                         print("error downloading photos from imageURL: \(imageURL) \(error.localizedDescription)")
                         dispatch_async(dispatch_get_main_queue()){
                             image.loadUpdateHandler = nil
-                            print("NO IMAGE LINE 166")
-                            //cell.imageView.image = UIImage(named: "pictureNoImage")
-                            //cell.cellSpinner.stopAnimating()
+                            cell.imageView.image = UIImage(named: "noImage")
+                            cell.cellSpinner.stopAnimating()
                         }
                     }
                     else {
@@ -267,7 +269,7 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
                                 image.loadUpdateHandler = { [unowned self] () -> Void in
                                     dispatch_async(dispatch_get_main_queue(), {
                                         self.myCollectionView!.reloadItemsAtIndexPaths([indexPath])
-                                        // cell.cellSpinner.hidden = true
+                                        cell.cellSpinner.hidden = true
                                     })
                                 }
                                 image.imageView = imageFromData
@@ -275,9 +277,9 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
                             else
                             {
                                 image.loadUpdateHandler = nil
-                                print("NO IMAGE LINE 187")
-                                //cell.imageView.image = UIImage(named: "pictureNoImage")
-                                //cell.cellSpinner.stopAnimating()
+                                print("NO IMAGE.")
+                                cell.imageView.image = UIImage(named: "noImage")
+                                cell.cellSpinner.stopAnimating()
                             }
                         }
                     }
@@ -288,4 +290,42 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
     }
     
     
+}
+
+extension InstaCollectionViewController : UIImagePickerControllerDelegate {
+
+    @IBAction func shareImage(sender: AnyObject) {
+        var images = [UIImage]()
+        for index in selectedIndexes {
+            let selectedImage = fetchedResultsController.objectAtIndexPath(index) as! Image
+            print("SELECTED IMAGE: ", selectedImage)
+            if let imageURL = NSURL(string: selectedImage.url) {
+                InstagramClient.sharedInstance.taskForImage(imageURL) { data, error in
+                    if let error = error {
+                        print("error downloading photos from imageURL: \(imageURL), \(error.localizedDescription)")
+                    } else {
+                    if let imageFromData = UIImage(data: data!) {
+                        images.append(imageFromData)
+                    }
+                    }
+                }
+            }
+            //let image : UIImage = UIImage(contentsOfFile: selectedImage.path!)!
+            //images.append(image)
+            //print("IMAGES: ", images)
+            //selectedImage.url
+            //images = selectedImage.imageView!.images!
+        }
+        print("IMAGES TO SEND: ", images)
+        let vc = UIActivityViewController(activityItems: images, applicationActivities: [])
+        
+        vc.completionWithItemsHandler = {
+            activity, completed, items, error in
+            if completed {
+                self.navigationController!.popViewControllerAnimated(true)
+            }
+        }
+        presentViewController(vc, animated: true, completion: nil)
+    }
+
 }

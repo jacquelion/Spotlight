@@ -9,29 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Spotlight/InstagramClient.swift"
-            timestampString = "483672196.830893"
+            filePath = "Spotlight/InstaCollectionViewController.swift"
+            timestampString = "483764049.558236"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
-            landmarkName = "taskForGETMethod(_:parameters:completionHandlerForGET:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Spotlight/MapViewController.swift"
-            timestampString = "483673467.556245"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "209"
-            endingLineNumber = "209"
-            landmarkName = "mapView(_:didSelectAnnotationView:)"
+            startingLineNumber = "299"
+            endingLineNumber = "299"
+            landmarkName = "shareImage(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
