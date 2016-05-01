@@ -6,7 +6,9 @@ User can geolocate themselves using the "Find Me" button in top right corner in 
 
 This app uses Instagram OAuth.
 
-##NOTE: The app is currently in "Sandbox Mode", which means only approved Instagram users that I have approved for beta testing can use this. Additionally, the networking call only accesses public photos from the approved users (rather than all public data). Currently I am the only Instagram user I have approved for testing.
+##NOTE:
+
+The app is currently in "Sandbox Mode", which means only approved Instagram users that I have approved for beta testing can use this. Additionally, the networking call only accesses public photos from the approved users (rather than all public data). Currently I am the only Instagram user I have approved for testing.
 
 ****FOR TESTING PURPOSES, please log in using the username: jacquelions, and the password: Udacity1234!****
 I only have pictures in "Berkeley" and in "Fremont". 
