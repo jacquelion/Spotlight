@@ -13,11 +13,12 @@ import MapKit
 
 class InstaCollectionViewController : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, NSFetchedResultsControllerDelegate, MKMapViewDelegate {
     //MARK: - Collection View Outlets
-   
+    
     @IBOutlet weak var myCollectionView: UICollectionView!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var shareButton: UIBarButtonItem!
     
+    @IBOutlet weak var toolbar: UIToolbar!
     //Hold indexes of selected cells
     var selectedIndexes = [NSIndexPath]()
     //Track when cells are inserted, deleted, or updated
@@ -45,7 +46,7 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
             CoreDataStackManager.sharedInstance().saveContext()
         }
         loadImages(self.location)
-
+        
     }
     
     @IBAction func done(sender: UIBarButtonItem) {
@@ -79,20 +80,20 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
     }
     
     //Layout the collection view
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        
-//        // Lay out the collection view so that cells take up 1/3 of the width,
-//        // with no space in between.
-//        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-//        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-//        layout.minimumLineSpacing = 0
-//        layout.minimumInteritemSpacing = 0
-//        
-//        let width = floor(self.myCollectionView.frame.size.width/2)
-//        layout.itemSize = CGSize(width: width, height: width)
-//        myCollectionView.collectionViewLayout = layout
-//    }
+    //    override func viewDidLayoutSubviews() {
+    //        super.viewDidLayoutSubviews()
+    //
+    //        // Lay out the collection view so that cells take up 1/3 of the width,
+    //        // with no space in between.
+    //        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+    //        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    //        layout.minimumLineSpacing = 0
+    //        layout.minimumInteritemSpacing = 0
+    //
+    //        let width = floor(self.myCollectionView.frame.size.width/2)
+    //        layout.itemSize = CGSize(width: width, height: width)
+    //        myCollectionView.collectionViewLayout = layout
+    //    }
     
     
     func loadImages(location: Location){
@@ -120,7 +121,7 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
         mapView.addAnnotation(annotation)
     }
     
-
+    
     
     //MARK: - Core Data Convenience
     var sharedContext: NSManagedObjectContext {
@@ -182,7 +183,7 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
         }
         
     }
-
+    
     
     //MARK: - Fetched Results Controller Delegate
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
@@ -239,7 +240,7 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
     }
     
     func configureCell(cell: InstagramImageCollectionViewCell, atIndexPath indexPath: NSIndexPath) {
-    
+        
         let image = fetchedResultsController.objectAtIndexPath(indexPath) as! Image
         
         if let imageView = image.imageView{
@@ -249,7 +250,7 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
             image.loadUpdateHandler = nil
             cell.imageView.image = UIImage(named: "imagePlaceholder")
             cell.cellSpinner.startAnimating()
-
+            
             
             if let imageURL = NSURL(string: image.url) {
                 InstagramClient.sharedInstance.taskForImage(imageURL) { data, error in
@@ -286,38 +287,39 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
                 }
             }
         }
-    
+        
     }
     
     
 }
 
 extension InstaCollectionViewController : UIImagePickerControllerDelegate {
-
+    
+    func generateSelectedImage() -> UIImage {
+        navigationController?.navigationBarHidden = true
+        navigationController?.toolbarHidden = true
+        
+        tabBarController?.tabBar.hidden = true
+        toolbar.hidden = true
+        
+        UIGraphicsBeginImageContext(self.view.frame.size)
+        view.drawViewHierarchyInRect(self.view.frame, afterScreenUpdates: true)
+        print(self.view.frame)
+        let selectedImage : UIImage =
+            UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        navigationController?.navigationBarHidden = false
+        tabBarController?.tabBar.hidden = false
+        toolbar.hidden = false
+        
+        return selectedImage
+    }
+    
     @IBAction func shareImage(sender: AnyObject) {
-        var images = [UIImage]()
-        for index in selectedIndexes {
-            let selectedImage = fetchedResultsController.objectAtIndexPath(index) as! Image
-            print("SELECTED IMAGE: ", selectedImage)
-            if let imageURL = NSURL(string: selectedImage.url) {
-                InstagramClient.sharedInstance.taskForImage(imageURL) { data, error in
-                    if let error = error {
-                        print("error downloading photos from imageURL: \(imageURL), \(error.localizedDescription)")
-                    } else {
-                    if let imageFromData = UIImage(data: data!) {
-                        images.append(imageFromData)
-                    }
-                    }
-                }
-            }
-            //let image : UIImage = UIImage(contentsOfFile: selectedImage.path!)!
-            //images.append(image)
-            //print("IMAGES: ", images)
-            //selectedImage.url
-            //images = selectedImage.imageView!.images!
-        }
-        print("IMAGES TO SEND: ", images)
-        let vc = UIActivityViewController(activityItems: images, applicationActivities: [])
+
+        let myImages = generateSelectedImage()
+        let vc = UIActivityViewController(activityItems: [myImages], applicationActivities: [])
         
         vc.completionWithItemsHandler = {
             activity, completed, items, error in
@@ -327,5 +329,5 @@ extension InstaCollectionViewController : UIImagePickerControllerDelegate {
         }
         presentViewController(vc, animated: true, completion: nil)
     }
-
+    
 }
