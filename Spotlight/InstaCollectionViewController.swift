@@ -17,6 +17,8 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
     @IBOutlet weak var myCollectionView: UICollectionView!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var shareButton: UIBarButtonItem!
+    @IBOutlet weak var refreshButton: UIBarButtonItem!
+    @IBOutlet weak var mySpinner: UIActivityIndicatorView!
     
     @IBOutlet weak var toolbar: UIToolbar!
     //Hold indexes of selected cells
@@ -37,7 +39,7 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
     //TODO: Add Sharing Capabilites via
     
     @IBAction func refreshPictures(sender: AnyObject) {
-        //mySpinner.startAnimating()
+        mySpinner.hidden = false
         if let fetchedObjects = self.fetchedResultsController.fetchedObjects {
             for object in fetchedObjects{
                 let image = object as! Image
@@ -73,8 +75,11 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        shareButton.enabled = false
+        
         print("Location already loaded pictures? ", location.loadedPictures)
         if (location.loadedPictures == false) {
+            refreshButton.enabled = false
             loadImages(location)
         }
     }
@@ -97,12 +102,29 @@ class InstaCollectionViewController : UIViewController, UICollectionViewDelegate
     
     
     func loadImages(location: Location){
-        InstagramClient.sharedInstance.getPicturesByLocation(self, location: location) { result, error in
-            if let error = error {
-                print(error)
-            } else {
-                dispatch_async(dispatch_get_main_queue()) {
-                    CoreDataStackManager.sharedInstance().saveContext()
+        mySpinner.hidden = false
+        if Reachability.isConnectedToNetwork() == false {
+            mySpinner.hidden = true
+            print("Internet connection FAILED")
+            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: .Alert)
+            let action = UIAlertAction(title: "OK", style: .Default) { _ in
+                return
+            }
+            alert.addAction(action)
+            self.presentViewController(alert, animated: true){}
+            
+        } else {
+            
+            InstagramClient.sharedInstance.getPicturesByLocation(self, location: location) { result, error in
+                if let error = error {
+                    print(error)
+                } else {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        
+                        CoreDataStackManager.sharedInstance().saveContext()
+                        self.refreshButton.enabled = true
+                        self.mySpinner.hidden = true
+                    }
                 }
             }
         }
@@ -317,7 +339,7 @@ extension InstaCollectionViewController : UIImagePickerControllerDelegate {
     }
     
     @IBAction func shareImage(sender: AnyObject) {
-
+        
         let myImages = generateSelectedImage()
         let vc = UIActivityViewController(activityItems: [myImages], applicationActivities: [])
         

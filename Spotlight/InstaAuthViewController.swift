@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 class InstaAuthViewController: UIViewController {
+    
+    @IBOutlet weak var mySpinner: UIActivityIndicatorView?
 
     var urlRequest: NSURLRequest? = nil //this is passed in when view controller is instantiated
     var accessToken: String! = nil
@@ -35,7 +37,19 @@ class InstaAuthViewController: UIViewController {
         super.viewWillAppear(true)
         
         if let urlRequest = urlRequest {
+            if Reachability.isConnectedToNetwork() == false {
+                self.mySpinner!.hidden = true
+                print("Internet connection FAILED")
+                let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: .Alert)
+                let action = UIAlertAction(title: "OK", style: .Default) { _ in
+                    return
+                }
+                alert.addAction(action)
+                self.presentViewController(alert, animated: true){}
+                
+            } else {
             webView.loadRequest(urlRequest)
+            }
         }
     }
     
@@ -52,6 +66,7 @@ class InstaAuthViewController: UIViewController {
 extension InstaAuthViewController : UIWebViewDelegate {
 
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        mySpinner!.hidden = false
         let url = request.URL
         var key: String
         var value: String
@@ -62,6 +77,7 @@ extension InstaAuthViewController : UIWebViewDelegate {
             if key == "access_token" {
                 accessToken = value
                 InstagramClient.sharedInstance.AccessToken = accessToken
+                self.mySpinner!.hidden = true
                 saveAccessToken(accessToken)
                 print("ACCESS TOKEN: ", accessToken)
                 //TODO: Make request with location
@@ -72,7 +88,9 @@ extension InstaAuthViewController : UIWebViewDelegate {
         return true
     }
     
+    
     func webViewDidFinishLoad(webView: UIWebView) {
+        mySpinner!.hidden = true
         let urlString = ("https://www.instagram.com#access_token=\(accessToken)")
         print("webView.request!.URL!.absoluteString: ", webView.request!.URL!.absoluteString)
         //TODO: Sub Redirect URI Constant for string

@@ -25,6 +25,7 @@
 		6D26A21F1CCBE0600073FF3F /* InstagramConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A21E1CCBE0600073FF3F /* InstagramConvenience.swift */; };
 		6D26A2211CCBE1360073FF3F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A2201CCBE1360073FF3F /* Constants.swift */; };
 		6D26A2231CCBE1D40073FF3F /* GCDBlackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D26A2221CCBE1D40073FF3F /* GCDBlackBox.swift */; };
+		6DF336001CD7D448000ADE13 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF335FF1CD7D448000ADE13 /* Reachability.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		6D26A21E1CCBE0600073FF3F /* InstagramConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstagramConvenience.swift; sourceTree = "<group>"; };
 		6D26A2201CCBE1360073FF3F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		6D26A2221CCBE1D40073FF3F /* GCDBlackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GCDBlackBox.swift; sourceTree = "<group>"; };
+		6DF335FF1CD7D448000ADE13 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 				6D26A2201CCBE1360073FF3F /* Constants.swift */,
 				6D0E36591CCDAAB600CC654A /* Image.swift */,
 				6D0E365B1CCDAAC500CC654A /* Location.swift */,
+				6DF335FF1CD7D448000ADE13 /* Reachability.swift */,
 			);
 			name = Instagram;
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 				6D26A21B1CCAB8180073FF3F /* InstaAuthViewController.swift in Sources */,
 				6D26A2161CCAB29A0073FF3F /* InstaCollectionViewController.swift in Sources */,
 				6D0E365E1CCDC5F000CC654A /* ImageCache.swift in Sources */,
+				6DF336001CD7D448000ADE13 /* Reachability.swift in Sources */,
 				6D26A2211CCBE1360073FF3F /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

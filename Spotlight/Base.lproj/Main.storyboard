@@ -6,33 +6,6 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Add Images View Controller-->
-        <scene sceneID="zdZ-vJ-gj2">
-            <objects>
-                <viewController storyboardIdentifier="AddImagesViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0p9-WM-vBb" customClass="AddImagesViewController" customModule="Spotlight" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Tlb-q3-sZL"/>
-                        <viewControllerLayoutGuide type="bottom" id="PTT-d3-boG"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="BgA-p0-lfL">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wNC-ld-N9W">
-                                <rect key="frame" x="223" y="117" width="154" height="30"/>
-                                <state key="normal" title="Import from Instagram"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a3l-CK-Dtf">
-                                <rect key="frame" x="285" y="175" width="30" height="30"/>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="bls-yJ-GDz" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1734" y="429"/>
-        </scene>
         <!--Insta Collection View Controller-->
         <scene sceneID="2y8-H0-wRp">
             <objects>
@@ -122,6 +95,9 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="G1A-M8-gBP">
+                                <rect key="frame" x="290" y="290" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -133,7 +109,9 @@
                             <constraint firstItem="v5G-iv-g32" firstAttribute="top" secondItem="DOT-yb-flB" secondAttribute="bottom" id="QNA-op-QlF"/>
                             <constraint firstItem="tcB-yo-LKW" firstAttribute="bottom" secondItem="e0e-PQ-RwG" secondAttribute="top" id="SaU-DV-KFh"/>
                             <constraint firstItem="DOT-yb-flB" firstAttribute="leading" secondItem="DuA-jN-lRo" secondAttribute="leading" id="SwS-oJ-sZK"/>
+                            <constraint firstItem="G1A-M8-gBP" firstAttribute="centerY" secondItem="DuA-jN-lRo" secondAttribute="centerY" id="Wnr-ew-kty"/>
                             <constraint firstItem="DOT-yb-flB" firstAttribute="trailing" secondItem="v5G-iv-g32" secondAttribute="trailing" id="cDq-3A-bpm"/>
+                            <constraint firstItem="G1A-M8-gBP" firstAttribute="centerX" secondItem="DuA-jN-lRo" secondAttribute="centerX" id="kr2-e9-99g"/>
                             <constraint firstItem="935-4Y-bpU" firstAttribute="trailing" secondItem="tcB-yo-LKW" secondAttribute="trailing" id="ncH-GZ-5lr"/>
                             <constraint firstAttribute="trailing" secondItem="DOT-yb-flB" secondAttribute="trailing" id="rdu-Ho-Sub"/>
                             <constraint firstItem="935-4Y-bpU" firstAttribute="bottom" secondItem="e0e-PQ-RwG" secondAttribute="top" id="uis-d5-Ojs"/>
@@ -151,6 +129,8 @@
                     <connections>
                         <outlet property="mapView" destination="v5G-iv-g32" id="1ou-me-X06"/>
                         <outlet property="myCollectionView" destination="935-4Y-bpU" id="liG-UC-7zd"/>
+                        <outlet property="mySpinner" destination="G1A-M8-gBP" id="Esm-qk-1vn"/>
+                        <outlet property="refreshButton" destination="BIS-TR-udz" id="XJc-pT-fhO"/>
                         <outlet property="shareButton" destination="zS8-x9-sx1" id="wtN-vi-VFD"/>
                         <outlet property="toolbar" destination="tcB-yo-LKW" id="hQI-0U-yzp"/>
                     </connections>
@@ -178,64 +158,28 @@
                                     <outlet property="delegate" destination="FOB-aH-Ik1" id="U3N-MZ-jff"/>
                                 </connections>
                             </webView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="2gR-4k-G4R">
+                                <rect key="frame" x="290" y="290" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="2gR-4k-G4R" firstAttribute="centerX" secondItem="TIe-kH-xZ3" secondAttribute="centerX" id="CiX-bF-xyN"/>
                             <constraint firstItem="TIe-kH-xZ3" firstAttribute="bottom" secondItem="JDc-xS-6I7" secondAttribute="top" id="Jqk-af-udn"/>
                             <constraint firstItem="TIe-kH-xZ3" firstAttribute="top" secondItem="kI1-gQ-J5N" secondAttribute="top" id="WDa-gm-RBf"/>
+                            <constraint firstItem="2gR-4k-G4R" firstAttribute="centerY" secondItem="TIe-kH-xZ3" secondAttribute="centerY" id="ZmM-Mo-6ee"/>
                             <constraint firstItem="TIe-kH-xZ3" firstAttribute="leading" secondItem="kI1-gQ-J5N" secondAttribute="leading" id="bAs-tO-gEQ"/>
                             <constraint firstAttribute="trailing" secondItem="TIe-kH-xZ3" secondAttribute="trailing" id="oGB-Ui-ens"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="mySpinner" destination="2gR-4k-G4R" id="iox-0K-ARr"/>
                         <outlet property="webView" destination="TIe-kH-xZ3" id="4ec-b2-h4i"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vi3-q5-C1c" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1734" y="1084"/>
-        </scene>
-        <!--Collection View Controller-->
-        <scene sceneID="BFT-mf-7It">
-            <objects>
-                <collectionViewController storyboardIdentifier="OLD - InstaCollectionViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Nae-kI-oSt" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="xZY-aS-wMK">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="YkL-GT-D2J">
-                            <size key="itemSize" width="261" height="261"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        </collectionViewFlowLayout>
-                        <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="InstagramPictureCell" id="jCQ-gE-kUk" customClass="InstagramImageCollectionViewCell" customModule="Spotlight" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="261" height="261"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="261" height="261"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YCB-RJ-YEM">
-                                            <rect key="frame" x="0.0" y="0.0" width="261" height="261"/>
-                                        </imageView>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
-                                <connections>
-                                    <outlet property="imageView" destination="YCB-RJ-YEM" id="s95-Rv-puW"/>
-                                </connections>
-                            </collectionViewCell>
-                        </cells>
-                        <connections>
-                            <outlet property="dataSource" destination="Nae-kI-oSt" id="DeU-DS-ksd"/>
-                            <outlet property="delegate" destination="Nae-kI-oSt" id="x7i-qy-e9K"/>
-                        </connections>
-                    </collectionView>
-                </collectionViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Oi4-PE-4mv" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3103" y="429"/>
+            <point key="canvasLocation" x="1720" y="429"/>
         </scene>
         <!--My Map-->
         <scene sceneID="tne-QT-ifu">
@@ -255,15 +199,26 @@
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="7dO-eL-LfB">
                                 <rect key="frame" x="290" y="290" width="20" height="20"/>
                             </activityIndicatorView>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="search for a location by city" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="egc-Oa-ARQ">
+                                <rect key="frame" x="0.0" y="72" width="600" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <action selector="findLocation:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="rKF-EF-rzE"/>
+                                </connections>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="7dO-eL-LfB" firstAttribute="centerX" secondItem="3am-8I-V18" secondAttribute="centerX" id="8f3-WQ-SMc"/>
-                            <constraint firstItem="3am-8I-V18" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="HiF-lx-syP"/>
-                            <constraint firstItem="3am-8I-V18" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="IzJ-4E-ePh"/>
-                            <constraint firstAttribute="trailing" secondItem="3am-8I-V18" secondAttribute="trailing" id="UDM-FQ-BJ6"/>
+                            <constraint firstItem="egc-Oa-ARQ" firstAttribute="leading" secondItem="3am-8I-V18" secondAttribute="leading" id="0hM-kO-1pF"/>
+                            <constraint firstItem="3am-8I-V18" firstAttribute="centerX" secondItem="7dO-eL-LfB" secondAttribute="centerX" id="2TL-pa-KkI"/>
+                            <constraint firstItem="3am-8I-V18" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="8mX-Hg-4aP"/>
+                            <constraint firstItem="egc-Oa-ARQ" firstAttribute="trailing" secondItem="3am-8I-V18" secondAttribute="trailing" id="AS7-N5-XML"/>
+                            <constraint firstAttribute="trailing" secondItem="3am-8I-V18" secondAttribute="trailing" id="TcJ-EQ-Shs"/>
+                            <constraint firstItem="3am-8I-V18" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="VRo-fS-s7n"/>
+                            <constraint firstItem="3am-8I-V18" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="kO2-NA-bi6"/>
+                            <constraint firstItem="egc-Oa-ARQ" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="pkz-bP-4GR"/>
                             <constraint firstItem="7dO-eL-LfB" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="ual-2d-zLU"/>
-                            <constraint firstItem="3am-8I-V18" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="yNP-Sd-sRT"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="My Map" id="3mI-dU-YuO">
@@ -276,6 +231,7 @@
                     <connections>
                         <outlet property="mapView" destination="3am-8I-V18" id="343-W4-ThA"/>
                         <outlet property="mySpinner" destination="7dO-eL-LfB" id="9mf-kl-6Zd"/>
+                        <outlet property="searchTextField" destination="egc-Oa-ARQ" id="U6D-gq-1VV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

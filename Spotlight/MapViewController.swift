@@ -17,9 +17,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     var startLocation: CLLocation!
     var locationStatus : NSString = "Not Started"
     var locations = [Location]()
+    var location : String = ""
     var longitude : Double = 0.0
     var latitude : Double = 0.0
     
+    @IBOutlet weak var searchTextField: UITextField!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var mySpinner: UIActivityIndicatorView!
     
@@ -38,6 +40,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         startLocation = nil
         
         mapView.delegate = self
+        searchTextField.delegate = self
         
         view.backgroundColor = UIColor.grayColor()
         
@@ -53,6 +56,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         // Do any additional setup after loading the view, typically from a nib.
         loadMapAnnotations()
         restoreAccessToken()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        saveMapRegion()
     }
     
     func loadMapAnnotations(){
@@ -148,6 +155,18 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         locationManager.stopUpdatingLocation()
         print(error)
+        if Reachability.isConnectedToNetwork() == false {
+            mySpinner.hidden = true
+            print("Internet connection FAILED")
+            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: .Alert)
+            let action = UIAlertAction(title: "OK", style: .Default) { _ in
+                return
+            }
+            alert.addAction(action)
+            self.presentViewController(alert, animated: true){}
+            
+        }
+        
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -189,7 +208,18 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         //Add Annotation to Map
         let latitude = Double(location.coordinate.latitude)
         let longitude = Double(location.coordinate.longitude)
-        // print("Longitude: ", longitude, ", Latitude: ", latitude)
+        
+        var region: MKCoordinateRegion = self.mapView.region
+        region.center.latitude = latitude
+        region.center.longitude = longitude
+        
+        region.span = MKCoordinateSpanMake(0.5, 0.5)
+        
+        //Establish center point of map view to placemark
+        self.mapView.setRegion(region, animated: true)
+        //self.mapView.addAnnotation(MKPlacemark(placemark: placemark))
+        
+        
         let annotation = MKPointAnnotation()
         annotation.coordinate = location.coordinate
         mapView.addAnnotation(annotation)
@@ -231,6 +261,15 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             let locationToBeAdded = Location(dictionary: dictionary, context: sharedContext)
             
             self.locations.append(locationToBeAdded)
+            
+            var region: MKCoordinateRegion = self.mapView.region
+            region.center.latitude = latitude
+            region.center.longitude = longitude
+            region.span = MKCoordinateSpanMake(0.5, 0.5)
+            
+            //Establish center point of map view to placemark
+            self.mapView.setRegion(region, animated: true)
+            
             CoreDataStackManager.sharedInstance().saveContext()
         default:
             break
@@ -242,10 +281,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
 //MARK: - MapView Delegate
 
 extension MapViewController : MKMapViewDelegate {
-    
-    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        saveMapRegion()
-    }
     
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView){
         let latitude = (view.annotation?.coordinate.latitude)!
@@ -290,5 +325,78 @@ extension MapViewController : MKMapViewDelegate {
         mySpinner.stopAnimating()
         view.alpha = 1.0
     }
+    
+}
 
+extension MapViewController : UITextFieldDelegate {
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        searchTextField.resignFirstResponder()
+        return true
+    }
+    
+    
+    @IBAction func findLocation(sender: AnyObject) {
+        if (searchTextField.text == "") {
+            let alert = UIAlertController(title: "Empty Fields", message: "Please enter a valid address.", preferredStyle: .Alert)
+            let action = UIAlertAction(title: "OK", style: .Default) { _ in
+                //stop login if there are empty fields
+                return
+            }
+            alert.addAction(action)
+            self.presentViewController(alert, animated: true){}
+        } else {
+            location = searchTextField.text!
+            geocodeLocation()
+        }
+        
+    }
+    
+    func geocodeLocation() {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(location, completionHandler: {(placemarks, error) -> Void in
+            if((error) != nil){
+                print("Error", error)
+                self.mySpinner.hidden = true
+                let alert = UIAlertController(title: "Geocoder Failed", message: "Please enter a city and state, (i.e. Cupertino, CA).", preferredStyle: .Alert)
+                let action = UIAlertAction(title: "OK", style: .Default) { _ in
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                    return
+                }
+                alert.addAction(action)
+                self.presentViewController(alert, animated: true){}
+                
+            } else {
+                guard let placemark = placemarks![0] as? CLPlacemark else {
+                    let alert = UIAlertController(title: "Geocoder Failed", message: "Please enter a city and state, (i.e. Cupertino, CA).", preferredStyle: .Alert)
+                    let action = UIAlertAction(title: "OK", style: .Default) { _ in
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                        return
+                    }
+                    alert.addAction(action)
+                    self.presentViewController(alert, animated: true){}
+                }
+                
+                let locationToBeAdded = placemark.location
+                self.updateMapLocation(locationToBeAdded!)
+                
+//                var region: MKCoordinateRegion = self.mapView.region
+//                region.center.latitude = (placemark.location?.coordinate.latitude)!
+//                region.center.longitude = (placemark.location?.coordinate.longitude)!
+//                
+//                region.span = MKCoordinateSpanMake(0.5, 0.5)
+//                
+//                //Establish center point of map view to placemark
+//                self.mapView.setRegion(region, animated: true)
+//                self.mapView.addAnnotation(MKPlacemark(placemark: placemark))
+//                
+//                //get Longitude/Latitude coordinates from placemark location
+//                self.longitude = (placemark.location?.coordinate.longitude)!
+//                self.latitude = (placemark.location?.coordinate.latitude)!
+                
+                self.mySpinner.hidden = true
+            }
+        })
+    }
+    
 }
