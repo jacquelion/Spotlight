@@ -320,6 +320,12 @@ extension MapViewController : MKMapViewDelegate {
         self.presentViewController(vc, animated: true, completion: nil)
     }
     
+    func mapViewWillStartRenderingMap(mapView: MKMapView) {
+        mySpinner.startAnimating()
+        mySpinner.hidden = false
+        view.alpha = 0.8
+    }
+    
     func mapViewDidFinishRenderingMap(mapView: MKMapView, fullyRendered: Bool) {
         mySpinner.hidden = true
         mySpinner.stopAnimating()
@@ -354,20 +360,24 @@ extension MapViewController : UITextFieldDelegate {
     
     func geocodeLocation() {
         let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(location, completionHandler: {(placemarks, error) -> Void in
-            if((error) != nil){
-                print("Error", error)
-                self.mySpinner.hidden = true
-                let alert = UIAlertController(title: "Geocoder Failed", message: "Please enter a city and state, (i.e. Cupertino, CA).", preferredStyle: .Alert)
-                let action = UIAlertAction(title: "OK", style: .Default) { _ in
-                    self.dismissViewControllerAnimated(true, completion: nil)
-                    return
-                }
-                alert.addAction(action)
-                self.presentViewController(alert, animated: true){}
-                
-            } else {
-                guard let placemark = placemarks![0] as? CLPlacemark else {
+        self.mySpinner.hidden = false
+        
+        if Reachability.isConnectedToNetwork() == false {
+            mySpinner.hidden = true
+            print("Internet connection FAILED")
+            let alert = UIAlertController(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", preferredStyle: .Alert)
+            let action = UIAlertAction(title: "OK", style: .Default) { _ in
+                return
+            }
+            alert.addAction(action)
+            self.presentViewController(alert, animated: true){}
+            
+        } else {
+            
+            geocoder.geocodeAddressString(location, completionHandler: {(placemarks, error) -> Void in
+                if((error) != nil){
+                    print("Error", error)
+                    self.mySpinner.hidden = true
                     let alert = UIAlertController(title: "Geocoder Failed", message: "Please enter a city and state, (i.e. Cupertino, CA).", preferredStyle: .Alert)
                     let action = UIAlertAction(title: "OK", style: .Default) { _ in
                         self.dismissViewControllerAnimated(true, completion: nil)
@@ -375,28 +385,24 @@ extension MapViewController : UITextFieldDelegate {
                     }
                     alert.addAction(action)
                     self.presentViewController(alert, animated: true){}
+                    
+                } else {
+                    guard let placemark = placemarks![0] as? CLPlacemark else {
+                        let alert = UIAlertController(title: "Geocoder Failed", message: "Please enter a city and state, (i.e. Cupertino, CA).", preferredStyle: .Alert)
+                        let action = UIAlertAction(title: "OK", style: .Default) { _ in
+                            self.dismissViewControllerAnimated(true, completion: nil)
+                            return
+                        }
+                        alert.addAction(action)
+                        self.presentViewController(alert, animated: true){}
+                    }
+                    
+                    let locationToBeAdded = placemark.location
+                    self.updateMapLocation(locationToBeAdded!)
+                    
+                    self.mySpinner.hidden = true
                 }
-                
-                let locationToBeAdded = placemark.location
-                self.updateMapLocation(locationToBeAdded!)
-                
-//                var region: MKCoordinateRegion = self.mapView.region
-//                region.center.latitude = (placemark.location?.coordinate.latitude)!
-//                region.center.longitude = (placemark.location?.coordinate.longitude)!
-//                
-//                region.span = MKCoordinateSpanMake(0.5, 0.5)
-//                
-//                //Establish center point of map view to placemark
-//                self.mapView.setRegion(region, animated: true)
-//                self.mapView.addAnnotation(MKPlacemark(placemark: placemark))
-//                
-//                //get Longitude/Latitude coordinates from placemark location
-//                self.longitude = (placemark.location?.coordinate.longitude)!
-//                self.latitude = (placemark.location?.coordinate.latitude)!
-                
-                self.mySpinner.hidden = true
-            }
-        })
+            })
+        }
     }
-    
 }
